@@ -1,45 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Web.Http;
+using System.Net;
 
 namespace WebNeuralNets.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ValuesController : ControllerBase
+
+    [RoutePrefix("api/[controller]")]
+    public class ValuesController : ApiController
     {
+
+        public ValuesController()
+        {
+        }
+
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public IHttpActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(new string[] { "value1", "value2" });
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        [HttpGet]
+        [Route("{id}")]
+        public IHttpActionResult Get(int id)
         {
-            return "value";
+            return Ok($"{id} value");
         }
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IHttpActionResult Post([FromBody] string value)
         {
+            return Created("", value);
         }
 
         // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        [Route("{id}")]
+        public IHttpActionResult Put(int id, [FromBody] string value)
         {
+            return Ok();
         }
 
         // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete]
+        [Route("{id}")]
+        public IHttpActionResult Delete(int id)
         {
+            return StatusCode(HttpStatusCode.NoContent);
         }
     }
 }
