@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebNeuralNets.Models.db;
 
-namespace WebNeuralNets.Migrations
+namespace WebNeuralNets.Models.db.Migrations
 {
     [DbContext(typeof(WebNeuralNetDbContext))]
-    partial class WebNeuralNetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181104122735_AddedTranslation")]
+    partial class AddedTranslation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -149,6 +151,8 @@ namespace WebNeuralNets.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
+                    b.Property<int>("LanguageCode");
+
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
@@ -160,10 +164,6 @@ namespace WebNeuralNets.Migrations
                         .HasMaxLength(256);
 
                     b.Property<string>("PasswordHash");
-
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
 
                     b.Property<string>("SecurityStamp");
 
@@ -183,6 +183,23 @@ namespace WebNeuralNets.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("WebNeuralNets.Models.db.TranslationValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Key");
+
+                    b.Property<int>("LanguageCode");
+
+                    b.Property<string>("Value");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TranslationValues");
                 });
 
             modelBuilder.Entity("WebNeuralNets.Models.db.ApplicationRole", b =>

@@ -42,6 +42,11 @@ namespace WebNeuralNets
                 opt.Password.RequiredLength = 6;
                 opt.User.RequireUniqueEmail = true;
             });
+            services.ConfigureApplicationCookie(opt =>
+            {
+                opt.LoginPath = "/Account/Login";
+                opt.LogoutPath = "/Account/Logout";
+            });
 
             //Singletons
             services.AddSingleton<IConfigProvider>(config);

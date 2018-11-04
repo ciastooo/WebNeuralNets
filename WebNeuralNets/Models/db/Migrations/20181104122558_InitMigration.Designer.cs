@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebNeuralNets.Models.db;
 
-namespace WebNeuralNets.Migrations
+namespace WebNeuralNets.Models.db.Migrations
 {
     [DbContext(typeof(WebNeuralNetDbContext))]
-    [Migration("20181104111735_InitDb")]
-    partial class InitDb
+    [Migration("20181104122558_InitMigration")]
+    partial class InitMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
