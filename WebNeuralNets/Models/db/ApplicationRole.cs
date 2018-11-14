@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace WebNeuralNets.Models.db
+namespace WebNeuralNets.Models.DB
 {
     public class ApplicationRole : IdentityRole
     {

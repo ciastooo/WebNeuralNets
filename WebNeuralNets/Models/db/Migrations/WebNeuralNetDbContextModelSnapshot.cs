@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WebNeuralNets.Models.db;
+using WebNeuralNets.Models.DB;
 
-namespace WebNeuralNets.Models.db.Migrations
+namespace WebNeuralNets.Models.DB.Migrations
 {
     [DbContext(typeof(WebNeuralNetDbContext))]
     partial class WebNeuralNetDbContextModelSnapshot : ModelSnapshot
@@ -134,7 +134,7 @@ namespace WebNeuralNets.Models.db.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("WebNeuralNets.Models.db.ApplicationUser", b =>
+            modelBuilder.Entity("WebNeuralNets.Models.DB.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
@@ -183,7 +183,7 @@ namespace WebNeuralNets.Models.db.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("WebNeuralNets.Models.db.TranslationValue", b =>
+            modelBuilder.Entity("WebNeuralNets.Models.DB.TranslationValue", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -200,7 +200,7 @@ namespace WebNeuralNets.Models.db.Migrations
                     b.ToTable("TranslationValues");
                 });
 
-            modelBuilder.Entity("WebNeuralNets.Models.db.ApplicationRole", b =>
+            modelBuilder.Entity("WebNeuralNets.Models.DB.ApplicationRole", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
 
@@ -220,7 +220,7 @@ namespace WebNeuralNets.Models.db.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("WebNeuralNets.Models.db.ApplicationUser")
+                    b.HasOne("WebNeuralNets.Models.DB.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -228,7 +228,7 @@ namespace WebNeuralNets.Models.db.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("WebNeuralNets.Models.db.ApplicationUser")
+                    b.HasOne("WebNeuralNets.Models.DB.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -241,7 +241,7 @@ namespace WebNeuralNets.Models.db.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("WebNeuralNets.Models.db.ApplicationUser")
+                    b.HasOne("WebNeuralNets.Models.DB.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -249,7 +249,7 @@ namespace WebNeuralNets.Models.db.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("WebNeuralNets.Models.db.ApplicationUser")
+                    b.HasOne("WebNeuralNets.Models.DB.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);

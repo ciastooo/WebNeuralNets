@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using WebNeuralNets.Models.Enums;
 
-namespace WebNeuralNets.Models.db
+namespace WebNeuralNets.Models.DB
 {
     public class TranslationValue
     {

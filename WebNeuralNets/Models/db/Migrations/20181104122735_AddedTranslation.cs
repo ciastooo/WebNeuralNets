@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace WebNeuralNets.Models.db.Migrations
+namespace WebNeuralNets.Models.DB.Migrations
 {
     public partial class AddedTranslation : Migration
     {
