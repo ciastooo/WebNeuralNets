@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using WebNeuralNets.Models.Enums;
 
 namespace WebNeuralNets.Models.DB
@@ -13,6 +14,9 @@ namespace WebNeuralNets.Models.DB
             Logins = new List<IdentityUserLogin<int>>();
             NeuralNets = new List<NeuralNet>();
         }
+
+        [Key]
+        public int Id { get; set; }
 
         public LanguageCode LanguageCode { get; set; }
 

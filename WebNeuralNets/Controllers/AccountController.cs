@@ -1,14 +1,16 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
-using System.Web.Http;
 using WebNeuralNets.Models.DB;
 using WebNeuralNets.Models.Dto;
-using WebNeuralNets.Models.Enums;
 
-namespace WebNeuralNets.Controllers
+namespace GroupProjectBackend.Controllers
 {
-    [Route("Account")]
-    public class AccountController : ApiController
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AccountController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -20,35 +22,65 @@ namespace WebNeuralNets.Controllers
         }
 
         [HttpPost]
-        public async Task<object> Login([FromBody]LoginModelDto model)
+        [Route("Register")]
+        public async Task<IActionResult> Register(LoginModelDto model)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
-            
-            if (result.Succeeded)
+            try
             {
-                //var appUser = _userManager.Users.SingleOrDefault(r => r.Email == model.Email);
-                //return await GenerateJwtToken(model.Email, appUser);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+                var user = new ApplicationUser
+                {
+                    UserName = model.Username
+                };
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    return Ok("Registered");
+                }
+                return BadRequest(result.Errors);
             }
-
-            return Ok();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
-        public async Task<IHttpActionResult> Register([FromBody]LoginModelDto model)
+        [Route("Login")]
+        public async Task<IActionResult> Login(LoginModelDto model)
         {
-            var user = new ApplicationUser
+            try
             {
-                Email = model.Email,
-                LanguageCode = LanguageCode.ENG
-            };
-            var result = await _userManager.CreateAsync(user, model.Password);
-
-            if (result.Succeeded)
-            {
-                await _signInManager.SignInAsync(user, false);
-                //return await GenerateJwtToken(model.Email, user);
+                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
+                if (result.Succeeded)
+                {
+                    return Ok("Logged in");
+                }
+                return BadRequest("Couldn't log in");
             }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
+        [Authorize]
+        [HttpGet]
+        [Route("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("IsAuthenticated")]
+        public async Task<IActionResult> IsAuthenticated()
+        {
             return Ok();
         }
     }
