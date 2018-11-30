@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="BusinessLogic\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

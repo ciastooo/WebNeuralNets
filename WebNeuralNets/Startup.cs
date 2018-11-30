@@ -12,6 +12,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using WebNeuralNets.BusinessLogic;
 using WebNeuralNets.Models.DB;
 
 namespace WebNeuralNets
@@ -52,6 +53,14 @@ namespace WebNeuralNets
 
             //Singletons
             services.AddSingleton<IConfigProvider>(config);
+            services.AddSingleton<ITranslationHelper, TranslationHelper>(s =>
+            {
+                using(var scope = s.CreateScope())
+                {
+                    var dbContext = scope.ServiceProvider.GetService<WebNeuralNetDbContext>();
+                    return new TranslationHelper(dbContext);
+                }
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

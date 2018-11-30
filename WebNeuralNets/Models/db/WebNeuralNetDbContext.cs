@@ -55,17 +55,28 @@ namespace WebNeuralNets.Models.DB
                 .HasForeignKey(e => e.UserId)
                 .IsRequired();
 
+
+            modelBuilder.Entity<TranslationValue>()
+               .HasKey(t => new
+               {
+                   t.LanguageCode,
+                   t.Key
+               });
+
+
             modelBuilder.Entity<NeuralNet>()
                 .HasMany(e => e.Layers)
                 .WithOne(e => e.NeuralNet)
                 .HasForeignKey(e => e.NeuralNetId)
                 .IsRequired();
             
+
             modelBuilder.Entity<Layer>()
                 .HasMany(e => e.Neurons)
                 .WithOne(e => e.Layer)
                 .HasForeignKey(e => e.LayerId)
                 .IsRequired();
+
 
             modelBuilder.Entity<Neuron>()
                 .HasMany(e => e.PreviousDendrites)
