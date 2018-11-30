@@ -30,6 +30,7 @@ namespace WebNeuralNets.Models.DB
             modelBuilder.Entity<ApplicationUser>().Ignore(x => x.Email);
             modelBuilder.Entity<ApplicationUser>().Ignore(x => x.EmailConfirmed);
             modelBuilder.Entity<ApplicationUser>().Ignore(x => x.NormalizedEmail);
+            modelBuilder.Entity<ApplicationUser>().Ignore(x => x.TwoFactorEnabled);
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(e => e.Claims)
                 .WithOne()
@@ -69,11 +70,13 @@ namespace WebNeuralNets.Models.DB
             modelBuilder.Entity<Neuron>()
                 .HasMany(e => e.PreviousDendrites)
                 .WithOne(e => e.NextNeuron)
-                .HasForeignKey(e => e.NextNeuronId);
+                .HasForeignKey(e => e.NextNeuronId)
+                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Neuron>()
                 .HasMany(e => e.NextDendrites)
                 .WithOne(e => e.PreviousNeuron)
-                .HasForeignKey(e => e.PreviousNeuronId);
+                .HasForeignKey(e => e.PreviousNeuronId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

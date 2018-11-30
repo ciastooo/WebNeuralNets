@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using WebNeuralNets.Models.DB;
 using WebNeuralNets.Models.Dto;
@@ -27,6 +28,10 @@ namespace GroupProjectBackend.Controllers
         {
             try
             {
+                if (_signInManager.IsSignedIn(User))
+                {
+                    return BadRequest("Already logged in");
+                }
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
@@ -54,10 +59,15 @@ namespace GroupProjectBackend.Controllers
         {
             try
             {
+                if(_signInManager.IsSignedIn(User))
+                {
+                    return BadRequest("Already logged in");
+                }
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
                 if (result.Succeeded)
                 {
-                    return Ok("Logged in");
+                    var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                    return Ok(user);
                 }
                 return BadRequest("Couldn't log in");
             }
@@ -81,7 +91,8 @@ namespace GroupProjectBackend.Controllers
         [Route("IsAuthenticated")]
         public async Task<IActionResult> IsAuthenticated()
         {
-            return Ok();
+            var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            return Ok(user);
         }
     }
 }

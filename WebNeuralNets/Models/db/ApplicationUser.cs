@@ -9,20 +9,17 @@ namespace WebNeuralNets.Models.DB
     {
         public ApplicationUser()
         {
-            Roles = new HashSet <IdentityUserRole<int>>();
-            Claims = new List<IdentityUserClaim<int>>();
-            Logins = new List<IdentityUserLogin<int>>();
+            Roles = new HashSet <IdentityUserRole<string>>();
+            Claims = new List<IdentityUserClaim<string>>();
+            Logins = new List<IdentityUserLogin<string>>();
             NeuralNets = new List<NeuralNet>();
         }
 
-        [Key]
-        public int Id { get; set; }
-
         public LanguageCode LanguageCode { get; set; }
 
-        public virtual ICollection<IdentityUserRole<int>> Roles { get; }
-        public virtual ICollection<IdentityUserClaim<int>> Claims { get; }
-        public virtual ICollection<IdentityUserLogin<int>> Logins { get; }
+        public virtual ICollection<IdentityUserRole<string>> Roles { get; }
+        public virtual ICollection<IdentityUserClaim<string>> Claims { get; }
+        public virtual ICollection<IdentityUserLogin<string>> Logins { get; }
         public virtual ICollection<NeuralNet> NeuralNets { get; }
     }
 }

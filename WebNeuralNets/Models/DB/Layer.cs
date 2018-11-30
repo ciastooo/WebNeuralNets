@@ -17,6 +17,8 @@ namespace WebNeuralNets.Models.DB
 
         public int Order { get; set; }
 
+        public int Iteration { get; set; }
+
         public NeuralNet NeuralNet { get; set; }
         public IEnumerable<Neuron> Neurons { get; set; }
     }
