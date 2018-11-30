@@ -63,11 +63,16 @@ namespace GroupProjectBackend.Controllers
                 {
                     return BadRequest("Already logged in");
                 }
-                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
-                if (result.Succeeded)
+                var loginResult = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
+                if (loginResult.Succeeded)
                 {
                     var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                    return Ok(user);
+                    var result = new LoginModelDto
+                    {
+                        Id = user.Id,
+                        Username = user.UserName
+                    };
+                    return Ok(result);
                 }
                 return BadRequest("Couldn't log in");
             }
@@ -92,7 +97,12 @@ namespace GroupProjectBackend.Controllers
         public async Task<IActionResult> IsAuthenticated()
         {
             var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            return Ok(user);
+            var result = new LoginModelDto
+            {
+                Id = user.Id,
+                Username = user.UserName
+            };
+            return Ok(result);
         }
     }
 }
