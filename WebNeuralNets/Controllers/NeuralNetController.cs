@@ -72,6 +72,58 @@ namespace WebNeuralNets.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Get(int id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                    var result = await _dbcontext.NeuralNets.Where(nn => nn.Id == id && nn.UserId == userId).Select(nn => new NeuralNetDto
+                    {
+                       Id = nn.Id,
+                       Description = nn.Description,
+                       Name = nn.Name,
+                       Layers = nn.Layers.OrderBy(l => l.Order).Select(l => new LayerDto
+                       {
+                           Id = l.Id,
+                           Iteration = l.Iteration,
+                           Neurons = l.Neurons.Select(n => new NeuronDto {
+                               Id = n.Id,
+                               Bias = n.Bias,
+                               Delta = n.Delta,
+                               Value = n.Value,
+                               PreviousDendrites = n.PreviousDendrites.Select(d => new DendriteDto
+                               {
+                                   Id = d.Id,
+                                   Delta = d.Delta,
+                                   Weight = d.Weight,
+                                   NextNeuronId = d.NextNeuronId,
+                                   PreviousNeuronId = d.PreviousNeuronId
+                               }).ToList(),
+                               NextDendrites = n.NextDendrites.Select(d => new DendriteDto
+                               {
+                                   Id = d.Id,
+                                   Delta = d.Delta,
+                                   Weight = d.Weight,
+                                   NextNeuronId = d.NextNeuronId,
+                                   PreviousNeuronId = d.PreviousNeuronId
+                               }).ToList(),
+                           }).ToList()
+                       }).ToList()
+                    }).FirstOrDefaultAsync();
+                                                           
+                    return Ok(result);
+                }
+                return BadRequest(ModelState);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> Update(NeuralNetDto model)
         {
