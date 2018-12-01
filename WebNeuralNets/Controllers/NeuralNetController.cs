@@ -72,7 +72,7 @@ namespace WebNeuralNets.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> Get(int id)
         {
             try
