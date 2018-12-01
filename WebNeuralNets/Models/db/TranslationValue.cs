@@ -1,4 +1,5 @@
-﻿using WebNeuralNets.Models.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using WebNeuralNets.Models.Enums;
 
 namespace WebNeuralNets.Models.DB
 {

@@ -10,7 +10,12 @@ namespace WebNeuralNets.Models.DB
 
         public string UserId { get; set; }
 
-        public string Name { get; set; } 
+        [Required(AllowEmptyStrings = false)]
+        [MaxLength(50)]
+        public string Name { get; set; }
+
+        [MaxLength(255)]
+        public string Description { get; set; }
 
         public virtual ApplicationUser User { get; set; }
 
