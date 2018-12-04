@@ -49,11 +49,6 @@ namespace WebNeuralNets.Models.DB
                 .HasForeignKey(e => e.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<ApplicationUser>()
-                .HasMany(e => e.NeuralNets)
-                .WithOne()
-                .HasForeignKey(e => e.UserId)
-                .IsRequired();
 
 
             modelBuilder.Entity<TranslationValue>()
@@ -65,19 +60,24 @@ namespace WebNeuralNets.Models.DB
 
 
             modelBuilder.Entity<NeuralNet>()
-                .HasMany(e => e.Layers)
-                .WithOne(e => e.NeuralNet)
-                .HasForeignKey(e => e.NeuralNetId)
-                .IsRequired();
-            
+               .HasOne(e => e.User)
+               .WithMany(e => e.NeuralNets)
+               .HasForeignKey(e => e.UserId)
+               .IsRequired();
+
 
             modelBuilder.Entity<Layer>()
-                .HasMany(e => e.Neurons)
-                .WithOne(e => e.Layer)
-                .HasForeignKey(e => e.LayerId)
+                .HasOne(e => e.NeuralNet)
+                .WithMany(e => e.Layers)
+                .HasForeignKey(e => e.NeuralNetId)
                 .IsRequired();
 
 
+            modelBuilder.Entity<Neuron>()
+                .HasOne(e => e.Layer)
+                .WithMany(e => e.Neurons)
+                .HasForeignKey(e => e.LayerId)
+                .IsRequired();
             modelBuilder.Entity<Neuron>()
                 .HasMany(e => e.PreviousDendrites)
                 .WithOne(e => e.NextNeuron)

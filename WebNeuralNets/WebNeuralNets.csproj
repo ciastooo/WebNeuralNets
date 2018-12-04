@@ -11,6 +11,10 @@
     <Compile Remove="Models\DB\Migrations\20181130181146_NeuralNetStructure.Designer.cs" />
     <Compile Remove="Models\DB\Migrations\20181201122619_NeuralNetTableUpdate.cs" />
     <Compile Remove="Models\DB\Migrations\20181201122619_NeuralNetTableUpdate.Designer.cs" />
+    <Compile Remove="Models\DB\Migrations\20181204211701_FixedStructure.cs" />
+    <Compile Remove="Models\DB\Migrations\20181204211701_FixedStructure.Designer.cs" />
+    <Compile Remove="Models\DB\Migrations\20181204212447_Init.cs" />
+    <Compile Remove="Models\DB\Migrations\20181204212447_Init.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

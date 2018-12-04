@@ -10,8 +10,8 @@ using WebNeuralNets.Models.DB;
 namespace WebNeuralNets.Models.DB.Migrations
 {
     [DbContext(typeof(WebNeuralNetDbContext))]
-    [Migration("20181204210742_AddedTrainingRate")]
-    partial class AddedTrainingRate
+    [Migration("20181204212549_FixedStructure")]
+    partial class FixedStructure
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -232,13 +232,9 @@ namespace WebNeuralNets.Models.DB.Migrations
                     b.Property<string>("UserId")
                         .IsRequired();
 
-                    b.Property<string>("UserId1");
-
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("NeuralNets");
                 });
@@ -353,14 +349,10 @@ namespace WebNeuralNets.Models.DB.Migrations
 
             modelBuilder.Entity("WebNeuralNets.Models.DB.NeuralNet", b =>
                 {
-                    b.HasOne("WebNeuralNets.Models.DB.ApplicationUser")
+                    b.HasOne("WebNeuralNets.Models.DB.ApplicationUser", "User")
                         .WithMany("NeuralNets")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("WebNeuralNets.Models.DB.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("WebNeuralNets.Models.DB.Neuron", b =>
