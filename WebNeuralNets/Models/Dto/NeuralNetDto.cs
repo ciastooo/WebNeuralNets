@@ -12,6 +12,10 @@ namespace WebNeuralNets.Models.Dto
 
         public string Description { get; set; }
 
+        public double TrainingRate { get; set; }
+
+        public int Iterations { get; set; }
+
         public IList<LayerDto> Layers { get; set; }
     }
 }

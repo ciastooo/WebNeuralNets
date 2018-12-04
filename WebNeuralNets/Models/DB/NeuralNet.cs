@@ -17,6 +17,8 @@ namespace WebNeuralNets.Models.DB
         [MaxLength(255)]
         public string Description { get; set; }
 
+        public double TrainingRate { get; set; }
+
         public virtual ApplicationUser User { get; set; }
 
         public ICollection<Layer> Layers { get; set; }

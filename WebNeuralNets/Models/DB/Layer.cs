@@ -20,6 +20,6 @@ namespace WebNeuralNets.Models.DB
         public int Iteration { get; set; }
 
         public NeuralNet NeuralNet { get; set; }
-        public IEnumerable<Neuron> Neurons { get; set; }
+        public ICollection<Neuron> Neurons { get; set; }
     }
 }

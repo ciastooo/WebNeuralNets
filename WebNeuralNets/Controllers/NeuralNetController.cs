@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using WebNeuralNets.BusinessLogic;
 using WebNeuralNets.Models.DB;
 using WebNeuralNets.Models.Dto;
 
@@ -17,9 +18,12 @@ namespace WebNeuralNets.Controllers
     {
         private readonly WebNeuralNetDbContext _dbcontext;
 
-        public NeuralNetController(WebNeuralNetDbContext dbContext)
+        private readonly INeuralNetCreator _neuralNetCreator;
+
+        public NeuralNetController(WebNeuralNetDbContext dbContext, INeuralNetCreator neuralNetCreator)
         {
             _dbcontext = dbContext;
+            _neuralNetCreator = neuralNetCreator;
         }
 
         [HttpPut]
@@ -29,13 +33,7 @@ namespace WebNeuralNets.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                    var dbModel = new NeuralNet
-                    {
-                        UserId = userId,
-                        Name = model.Name,
-                        Description = model.Description ?? String.Empty
-                    };
+                    var dbModel = _neuralNetCreator.CreateNeuralNet(model);
                     await _dbcontext.NeuralNets.AddAsync(dbModel);
                     await _dbcontext.SaveChangesAsync();
 
@@ -61,7 +59,8 @@ namespace WebNeuralNets.Controllers
                 {
                     Id = n.Id,
                     Name = n.Name,
-                    Description = n.Description
+                    Description = n.Description,
+                    Iterations = n.Layers.GroupBy(l => l.Iteration).Count()
                 }).ToListAsync();
 
                 return Ok(result);
@@ -82,38 +81,44 @@ namespace WebNeuralNets.Controllers
                     var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                     var result = await _dbcontext.NeuralNets.Where(nn => nn.Id == id && nn.UserId == userId).Select(nn => new NeuralNetDto
                     {
-                       Id = nn.Id,
-                       Description = nn.Description,
-                       Name = nn.Name,
-                       Layers = nn.Layers.OrderBy(l => l.Order).Select(l => new LayerDto
-                       {
-                           Id = l.Id,
-                           Iteration = l.Iteration,
-                           Neurons = l.Neurons.Select(n => new NeuronDto {
-                               Id = n.Id,
-                               Bias = n.Bias,
-                               Delta = n.Delta,
-                               Value = n.Value,
-                               PreviousDendrites = n.PreviousDendrites.Select(d => new DendriteDto
-                               {
-                                   Id = d.Id,
-                                   Delta = d.Delta,
-                                   Weight = d.Weight,
-                                   NextNeuronId = d.NextNeuronId,
-                                   PreviousNeuronId = d.PreviousNeuronId
-                               }).ToList(),
-                               NextDendrites = n.NextDendrites.Select(d => new DendriteDto
-                               {
-                                   Id = d.Id,
-                                   Delta = d.Delta,
-                                   Weight = d.Weight,
-                                   NextNeuronId = d.NextNeuronId,
-                                   PreviousNeuronId = d.PreviousNeuronId
-                               }).ToList(),
-                           }).ToList()
-                       }).ToList()
+                        Id = nn.Id,
+                        Description = nn.Description,
+                        Name = nn.Name,
+                        TrainingRate = nn.TrainingRate,
+                        Iterations = nn.Layers.GroupBy(l => l.Iteration).Count(),
+                        Layers = nn.Layers.GroupBy(l => l.Iteration)
+                                         .OrderByDescending(l => l.Key)
+                                         .SelectMany(l => l.ToList())
+                                         .OrderBy(l => l.Order)
+                                         .Select(l => new LayerDto
+                                         {
+                                             Id = l.Id,
+                                             Iteration = l.Iteration,
+                                             Neurons = l.Neurons.Select(n => new NeuronDto
+                                             {
+                                                 Id = n.Id,
+                                                 Bias = n.Bias,
+                                                 Delta = n.Delta,
+                                                 PreviousDendrites = n.PreviousDendrites.Select(d => new DendriteDto
+                                                 {
+                                                     Id = d.Id,
+                                                     Delta = d.Delta,
+                                                     Weight = d.Weight,
+                                                     NextNeuronId = d.NextNeuronId,
+                                                     PreviousNeuronId = d.PreviousNeuronId
+                                                 }).ToList(),
+                                                 NextDendrites = n.NextDendrites.Select(d => new DendriteDto
+                                                 {
+                                                     Id = d.Id,
+                                                     Delta = d.Delta,
+                                                     Weight = d.Weight,
+                                                     NextNeuronId = d.NextNeuronId,
+                                                     PreviousNeuronId = d.PreviousNeuronId
+                                                 }).ToList(),
+                                             }).ToList()
+                                         }).ToList()
                     }).FirstOrDefaultAsync();
-                                                           
+
                     return Ok(result);
                 }
                 return BadRequest(ModelState);
@@ -162,12 +167,12 @@ namespace WebNeuralNets.Controllers
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 var dbModel = await _dbcontext.NeuralNets.Where(n => n.Id == id && n.UserId == userId).FirstOrDefaultAsync();
 
-                if(dbModel == null)
+                if (dbModel == null)
                 {
                     return NotFound();
                 }
 
-                 _dbcontext.NeuralNets.Remove(dbModel);
+                _dbcontext.NeuralNets.Remove(dbModel);
                 await _dbcontext.SaveChangesAsync();
 
                 return NoContent();

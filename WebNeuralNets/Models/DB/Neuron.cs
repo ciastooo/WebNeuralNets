@@ -16,8 +16,6 @@ namespace WebNeuralNets.Models.DB
 
         public int LayerId { get; set; }
 
-        public double Value { get; set; }
-
         public double Bias { get; set; }
 
         public double Delta { get; set; }

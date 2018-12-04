@@ -6,8 +6,6 @@ namespace WebNeuralNets.Models.Dto
     {
         public int Id { get; set; }
 
-        public double Value { get; set; }
-
         public double Bias { get; set; }
 
         public double Delta { get; set; }

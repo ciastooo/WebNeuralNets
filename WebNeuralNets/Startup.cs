@@ -36,6 +36,7 @@ namespace WebNeuralNets
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
+            services.AddHttpContextAccessor();
 
             //DB and identity
             services.AddDbContext<WebNeuralNetDbContext>(opt => opt.UseSqlServer(config.ConnectionString));
@@ -50,6 +51,8 @@ namespace WebNeuralNets
                 opt.Password.RequireNonAlphanumeric = false;
                 opt.Password.RequireUppercase = false;
             });
+
+            services.AddScoped<INeuralNetCreator, NeuralNetCreator>();
 
             //Singletons
             services.AddSingleton<IConfigProvider>(config);
