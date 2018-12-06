@@ -11,13 +11,13 @@ namespace WebNeuralNets.Models.Dto
         [MaxLength(50)]
         public string Name { get; set; }
 
-        public IList<TrainingSetDto> TrainingSet { get; set; }
+        public List<TrainingSetDto> TrainingSet { get; set; }
     }
 
     public class TrainingSetDto
     {
-        public IList<double> Input { get; set; }
+        public List<double> Input { get; set; }
 
-        public IList<double> Output { get; set; }
+        public List<double> Output { get; set; }
     }
 }

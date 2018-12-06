@@ -8,6 +8,6 @@ namespace WebNeuralNets.Models.Dto
 
         public int Iteration { get; set; }
 
-        public IList<NeuronDto> Neurons { get; set; }
+        public List<NeuronDto> Neurons { get; set; }
     }
 }

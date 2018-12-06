@@ -20,8 +20,8 @@ namespace WebNeuralNets.Models.Dto
 
         public int TrainingIterations { get; set; }
 
-        public IList<LayerDto> Layers { get; set; }
+        public List<LayerDto> Layers { get; set; }
 
-        public IList<TrainingDataDto> TrainingData { get; set; }
+        public List<TrainingDataDto> TrainingData { get; set; }
     }
 }
