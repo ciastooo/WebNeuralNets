@@ -333,6 +333,25 @@ namespace WebNeuralNets.Controllers
             }
         }
 
+        [HttpGet("CurrentlyTraining")]
+        public async Task<IActionResult> GetCurrentlyTraining()
+        {
+            try
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var result = await _dbcontext.NeuralNets.Where(n => n.UserId == userId && n.Training).Select(nn => nn.Id).ToListAsync();
+
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+
+
         [HttpDelete("{id:int}/TrainingData/{setId:int}")]
         public async Task<IActionResult> GetTrainingData(int id, int setId)
         {

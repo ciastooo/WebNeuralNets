@@ -15,10 +15,19 @@ namespace WebNeuralNets.Controllers
             _translationHelper = translationHelper;
         }
 
-        [HttpGet]
+        [HttpGet("{key}")]
         public IActionResult GetTranslation(string key, LanguageCode language = LanguageCode.ENG)
         {
             var result = _translationHelper.GetTranslation(language, key);
+
+            return Ok(result);
+        }
+
+
+        [HttpGet]
+        public IActionResult GetTranslation()
+        {
+            var result = _translationHelper.GetKeys();
 
             return Ok(result);
         }

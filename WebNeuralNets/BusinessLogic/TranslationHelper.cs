@@ -26,5 +26,10 @@ namespace WebNeuralNets.BusinessLogic
             }
             return $"TRANSLATION_{key}_NOTFOUND";
         }
+
+        public string[] GetKeys()
+        {
+            return _translations.SelectMany(t => t.Value.Select(tt => tt.Key)).Distinct().ToArray();
+        }
     }
 }
