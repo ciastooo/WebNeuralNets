@@ -17,6 +17,8 @@
     <Compile Remove="Models\DB\Migrations\20181204212447_Init.Designer.cs" />
     <Compile Remove="Models\DB\Migrations\20181206151624_AddedTrainingDataTable.cs" />
     <Compile Remove="Models\DB\Migrations\20181206151624_AddedTrainingDataTable.Designer.cs" />
+    <Compile Remove="Models\DB\Migrations\20181206165501_AddedValueToNeuronTable.cs" />
+    <Compile Remove="Models\DB\Migrations\20181206165501_AddedValueToNeuronTable.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

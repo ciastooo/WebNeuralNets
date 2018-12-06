@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebNeuralNets.Models.DB
 {
@@ -19,6 +20,9 @@ namespace WebNeuralNets.Models.DB
         public double Bias { get; set; }
 
         public double Delta { get; set; }
+
+        [NotMapped]
+        public double Value { get; set; }
 
         public ICollection<Dendrite> PreviousDendrites { get; set; }
         public ICollection<Dendrite> NextDendrites { get; set; }
