@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using WebNeuralNets.Models.DB;
 using WebNeuralNets.Models.Enums;
@@ -7,12 +9,25 @@ namespace WebNeuralNets.BusinessLogic
 {
     public class TranslationHelper : ITranslationHelper
     {
-        private readonly Dictionary<LanguageCode, Dictionary<string, string>> _translations; 
+        private readonly IServiceProvider _serviceProvider;
 
-        public TranslationHelper(WebNeuralNetDbContext dbContext)
+        private Dictionary<LanguageCode, Dictionary<string, string>> _translations { get; set; } 
+
+        public TranslationHelper(IServiceProvider serviceProvider)
         {
-            var translations = dbContext.TranslationValues.GroupBy(t => t.LanguageCode).ToDictionary(gt => gt.Key, gt => gt.ToDictionary(tv => tv.Key, tv => tv.Value));
-            _translations = translations;
+            _serviceProvider = serviceProvider;
+
+            FlushTranslations();
+        }
+
+        public void FlushTranslations()
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetService<WebNeuralNetDbContext>();
+                var translations = dbContext.TranslationValues.GroupBy(t => t.LanguageCode).ToDictionary(gt => gt.Key, gt => gt.ToDictionary(tv => tv.Key, tv => tv.Value));
+                _translations = translations;
+            }
         }
 
         public string GetTranslation(LanguageCode language, string key)
@@ -24,7 +39,7 @@ namespace WebNeuralNets.BusinessLogic
                     return result;
                 }
             }
-            return $"TRANSLATION_{key}_NOTFOUND";
+            return null;
         }
 
         public string[] GetKeys()

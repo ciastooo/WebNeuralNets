@@ -58,14 +58,7 @@ namespace WebNeuralNets
 
             //Singletons
             services.AddSingleton<IConfigProvider>(config);
-            services.AddSingleton<ITranslationHelper, TranslationHelper>(s =>
-            {
-                using(var scope = s.CreateScope())
-                {
-                    var dbContext = scope.ServiceProvider.GetService<WebNeuralNetDbContext>();
-                    return new TranslationHelper(dbContext);
-                }
-            });
+            services.AddSingleton<ITranslationHelper, TranslationHelper>();
             services.AddSingleton<IActivationFunction, Sigmoid>();
             services.AddSingleton<INeuralNetTrainer, NeuralNetTrainer>();
 
