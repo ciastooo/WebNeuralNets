@@ -37,7 +37,7 @@ namespace WebNeuralNets.BusinessLogic
 
             if (neuralNet.Layers != null)
             {
-
+                // TODO: copying existing last iteration to a new one
             }
             else
             {

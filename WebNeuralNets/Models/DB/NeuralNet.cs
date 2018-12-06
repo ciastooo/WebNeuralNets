@@ -5,6 +5,12 @@ namespace WebNeuralNets.Models.DB
 {
     public class NeuralNet
     {
+        public NeuralNet()
+        {
+            Layers = new HashSet<Layer>();
+            TrainingData = new HashSet<TrainingData>();
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -22,5 +28,7 @@ namespace WebNeuralNets.Models.DB
         public virtual ApplicationUser User { get; set; }
 
         public ICollection<Layer> Layers { get; set; }
+
+        public ICollection<TrainingData> TrainingData { get; set; }
     }
 }

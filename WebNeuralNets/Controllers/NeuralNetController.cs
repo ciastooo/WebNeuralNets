@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -86,6 +87,16 @@ namespace WebNeuralNets.Controllers
                         Name = nn.Name,
                         TrainingRate = nn.TrainingRate,
                         Iterations = nn.Layers.GroupBy(l => l.Iteration).Count(),
+                        TrainingData = nn.TrainingData.Select(td => new TrainingDataDto
+                        {
+                            Id = td.Id,
+                            Name = td.Name,
+                            TrainingSet = td.TrainingSet.Select(ts => new TrainingSetDto
+                            {
+                                Input = ts.Input.ToList(),
+                                Output = ts.Output.ToList(),
+                            }).ToList()
+                        }).ToList(),
                         Layers = nn.Layers.GroupBy(l => l.Iteration)
                                          .OrderByDescending(l => l.Key)
                                          .SelectMany(l => l.ToList())
@@ -173,6 +184,101 @@ namespace WebNeuralNets.Controllers
                 }
 
                 _dbcontext.NeuralNets.Remove(dbModel);
+                await _dbcontext.SaveChangesAsync();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPut("{id:int}/TrainingData")]
+        public async Task<IActionResult> UploadTrainingData(int id, TrainingDataDto model)
+        {
+            try
+            {
+                if(!ModelState.IsValid || model.TrainingSet == null || model.TrainingSet.Count < 2)
+                {
+                    return BadRequest("VALIDATION_INVALIDTRAININGDATA");
+                }
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var neuralNet = await _dbcontext.NeuralNets.Include(nn => nn.Layers).Where(nn => nn.Id == id && nn.UserId == userId).FirstOrDefaultAsync();
+                if (neuralNet == null)
+                {
+                    return BadRequest();
+                }
+                var inputLayer = neuralNet.Layers.OrderBy(l => l.Order).Select(l => l.Neurons.Count).FirstOrDefault();
+                var outputLayer = neuralNet.Layers.OrderByDescending(l => l.Order).Select(l => l.Neurons.Count).FirstOrDefault();
+
+                if(model.TrainingSet.Any(ts => ts.Input.Count != inputLayer || ts.Output.Count != outputLayer)) {
+                    return BadRequest("VALIDATION_INVALIDTRAININGDATA");
+                }
+
+                var dbTrainingData = new TrainingData
+                {
+                    Name = model.Name,
+                    NeuralNetId = id,
+                    TrainingSet = model.TrainingSet.Select(ts => new TrainingSet
+                    {
+                        Input = ts.Input,
+                        Output = ts.Output
+                    }).ToList()
+                };
+
+                await _dbcontext.TrainingData.AddAsync(dbTrainingData);
+                await _dbcontext.SaveChangesAsync();
+                model.Id = dbTrainingData.Id;
+
+                return Ok(model);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+
+        [HttpGet("{id:int}/TrainingData")]
+        public async Task<IActionResult> GetTrainingData(int id)
+        {
+            try
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var trainingData = await _dbcontext.TrainingData.Where(t => t.NeuralNetId == id && t.NeuralNet.UserId == userId)
+                                                                .Select(t => new TrainingDataDto
+                                                                {
+                                                                    Id = t.Id,
+                                                                    Name = t.Name,
+                                                                    TrainingSet = t.TrainingSet.Select(ts => new TrainingSetDto
+                                                                    {
+                                                                        Input = ts.Input.ToList(),
+                                                                        Output = ts.Output.ToList()
+                                                                    }).ToList()
+                                                                }).ToListAsync();
+
+                return Ok(trainingData);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpDelete("{id:int}/TrainingData/{setId:int}")]
+        public async Task<IActionResult> GetTrainingData(int id, int setId)
+        {
+            try
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var trainingData = await _dbcontext.TrainingData.Where(t => t.Id == setId && t.NeuralNetId == id && t.NeuralNet.UserId == userId).FirstOrDefaultAsync();
+                if (trainingData == null)
+                {
+                    return NotFound();
+                }
+
+                _dbcontext.TrainingData.Remove(trainingData);
                 await _dbcontext.SaveChangesAsync();
 
                 return NoContent();

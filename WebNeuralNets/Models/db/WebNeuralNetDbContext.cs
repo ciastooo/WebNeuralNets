@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace WebNeuralNets.Models.DB
 {
@@ -20,6 +22,7 @@ namespace WebNeuralNets.Models.DB
         public DbSet<Layer> Layers { get; set; }
         public DbSet<Dendrite> Dendrites { get; set; }
         public DbSet<Neuron> Neurons { get; set; }
+        public DbSet<TrainingData> TrainingData { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -88,6 +91,18 @@ namespace WebNeuralNets.Models.DB
                 .WithOne(e => e.PreviousNeuron)
                 .HasForeignKey(e => e.PreviousNeuronId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+
+            modelBuilder.Entity<TrainingData>()
+                .HasOne(e => e.NeuralNet)
+                .WithMany(e => e.TrainingData)
+                .HasForeignKey(e => e.NeuralNetId)
+                .IsRequired();
+            modelBuilder.Entity<TrainingData>()
+                .Property(e => e.TrainingSet)
+                .HasConversion(
+                    e => JsonConvert.SerializeObject(e),
+                    e => JsonConvert.DeserializeObject<IList<TrainingSet>>(e));
         }
     }
 }
