@@ -18,13 +18,14 @@ namespace WebNeuralNets.Controllers
     public class NeuralNetController : ControllerBase
     {
         private readonly WebNeuralNetDbContext _dbcontext;
-
         private readonly INeuralNetCreator _neuralNetCreator;
+        private readonly INeuralNetTrainer _neuralNetTrainer;
 
-        public NeuralNetController(WebNeuralNetDbContext dbContext, INeuralNetCreator neuralNetCreator)
+        public NeuralNetController(WebNeuralNetDbContext dbContext, INeuralNetCreator neuralNetCreator, INeuralNetTrainer neuralNetTrainer)
         {
             _dbcontext = dbContext;
             _neuralNetCreator = neuralNetCreator;
+            _neuralNetTrainer = neuralNetTrainer;
         }
 
         [HttpPut]
@@ -61,7 +62,9 @@ namespace WebNeuralNets.Controllers
                     Id = n.Id,
                     Name = n.Name,
                     Description = n.Description,
-                    Iterations = n.Layers.GroupBy(l => l.Iteration).Count()
+                    Iterations = n.Layers.GroupBy(l => l.Iteration).Count(),
+                    TrainingIterations = n.TrainingIterations,
+                    TrainingRate = n.TrainingRate
                 }).ToListAsync();
 
                 return Ok(result);
@@ -87,6 +90,8 @@ namespace WebNeuralNets.Controllers
                         Name = nn.Name,
                         TrainingRate = nn.TrainingRate,
                         Iterations = nn.Layers.GroupBy(l => l.Iteration).Count(),
+                        Training = nn.Training,
+                        TrainingIterations = nn.TrainingIterations,
                         TrainingData = nn.TrainingData.Select(td => new TrainingDataDto
                         {
                             Id = td.Id,
@@ -109,11 +114,9 @@ namespace WebNeuralNets.Controllers
                                              {
                                                  Id = n.Id,
                                                  Bias = n.Bias,
-                                                 Delta = n.Delta,
                                                  PreviousDendrites = n.PreviousDendrites.Select(d => new DendriteDto
                                                  {
                                                      Id = d.Id,
-                                                     Delta = d.Delta,
                                                      Weight = d.Weight,
                                                      NextNeuronId = d.NextNeuronId,
                                                      PreviousNeuronId = d.PreviousNeuronId
@@ -121,7 +124,6 @@ namespace WebNeuralNets.Controllers
                                                  NextDendrites = n.NextDendrites.Select(d => new DendriteDto
                                                  {
                                                      Id = d.Id,
-                                                     Delta = d.Delta,
                                                      Weight = d.Weight,
                                                      NextNeuronId = d.NextNeuronId,
                                                      PreviousNeuronId = d.PreviousNeuronId
@@ -157,6 +159,7 @@ namespace WebNeuralNets.Controllers
 
                     dbModel.Name = model.Name;
                     dbModel.Description = model.Description;
+                    dbModel.Training = model.Training;
 
                     await _dbcontext.SaveChangesAsync();
 
@@ -194,25 +197,64 @@ namespace WebNeuralNets.Controllers
             }
         }
 
+        [HttpGet("{id:int}/Propagate")]
+        public async Task<IActionResult> Propagate(int id, List<double> input)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                    var neuralNet = await _dbcontext.NeuralNets.Include(nn => nn.Layers)
+                                                                    .ThenInclude(l => l.Neurons)
+                                                                    .ThenInclude(n => n.PreviousDendrites)
+                                                               .Include(nn => nn.Layers)
+                                                                    .ThenInclude(l => l.Neurons)
+                                                                    .ThenInclude(n => n.NextDendrites)
+                                                               .Where(nn => nn.Id == id && nn.UserId == userId).FirstOrDefaultAsync();
+
+                    if (neuralNet == null)
+                    {
+                        return BadRequest();
+                    }
+
+                    var inputLayer = neuralNet.Layers.OrderBy(l => l.Order).FirstOrDefault().Neurons.Count();
+                    if (inputLayer != input.Count)
+                    {
+                        return BadRequest();
+                    }
+
+                    var outputLayerValues = _neuralNetTrainer.Propagate(neuralNet, input.ToArray());
+                    return Ok(outputLayerValues);
+                }
+                return BadRequest(ModelState);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [HttpPut("{id:int}/TrainingData")]
         public async Task<IActionResult> UploadTrainingData(int id, TrainingDataDto model)
         {
             try
             {
-                if(!ModelState.IsValid || model.TrainingSet == null || model.TrainingSet.Count < 2)
+                if (!ModelState.IsValid || model.TrainingSet == null)
                 {
                     return BadRequest("VALIDATION_INVALIDTRAININGDATA");
                 }
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                var neuralNet = await _dbcontext.NeuralNets.Include(nn => nn.Layers).Where(nn => nn.Id == id && nn.UserId == userId).FirstOrDefaultAsync();
+                var neuralNet = await _dbcontext.NeuralNets.Include(nn => nn.Layers).ThenInclude(l => l.Neurons).Where(nn => nn.Id == id && nn.UserId == userId).FirstOrDefaultAsync();
                 if (neuralNet == null)
                 {
                     return BadRequest();
                 }
-                var inputLayer = neuralNet.Layers.OrderBy(l => l.Order).Select(l => l.Neurons.Count).FirstOrDefault();
-                var outputLayer = neuralNet.Layers.OrderByDescending(l => l.Order).Select(l => l.Neurons.Count).FirstOrDefault();
+                var inputLayer = neuralNet.Layers.OrderBy(l => l.Order).FirstOrDefault().Neurons.Count();
+                var outputLayer = neuralNet.Layers.OrderByDescending(l => l.Order).FirstOrDefault().Neurons.Count();
 
-                if(model.TrainingSet.Any(ts => ts.Input.Count != inputLayer || ts.Output.Count != outputLayer)) {
+                if (model.TrainingSet.Any(ts => ts.Input.Count != inputLayer || ts.Output.Count != outputLayer))
+                {
                     return BadRequest("VALIDATION_INVALIDTRAININGDATA");
                 }
 
@@ -233,12 +275,11 @@ namespace WebNeuralNets.Controllers
 
                 return Ok(model);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex);
             }
         }
-
 
         [HttpGet("{id:int}/TrainingData")]
         public async Task<IActionResult> GetTrainingData(int id)
@@ -259,6 +300,32 @@ namespace WebNeuralNets.Controllers
                                                                 }).ToListAsync();
 
                 return Ok(trainingData);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPost("{id:int}/Train")]
+        public async Task<IActionResult> Update(int id)
+        {
+            try
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var dbModel = await _dbcontext.NeuralNets.Where(n => n.Id == id && n.UserId == userId).FirstOrDefaultAsync();
+
+                if (dbModel == null)
+                {
+                    return NotFound();
+                }
+
+                dbModel.Training = !dbModel.Training;
+
+                await _dbcontext.SaveChangesAsync();
+
+                return Ok(dbModel.Training ? "NEURALNET_TRAININGACTIVATED" : "NEURALNET_TRAININGDISACTIVATED");
+
             }
             catch (Exception ex)
             {

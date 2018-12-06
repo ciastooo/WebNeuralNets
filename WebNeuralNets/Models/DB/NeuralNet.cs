@@ -25,6 +25,10 @@ namespace WebNeuralNets.Models.DB
 
         public double TrainingRate { get; set; }
 
+        public bool Training { get; set; }
+
+        public int TrainingIterations { get; set; }
+
         public virtual ApplicationUser User { get; set; }
 
         public ICollection<Layer> Layers { get; set; }

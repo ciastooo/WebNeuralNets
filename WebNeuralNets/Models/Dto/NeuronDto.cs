@@ -8,8 +8,6 @@ namespace WebNeuralNets.Models.Dto
 
         public double Bias { get; set; }
 
-        public double Delta { get; set; }
-
         public IList<DendriteDto> PreviousDendrites { get; set; }
 
         public IList<DendriteDto> NextDendrites { get; set; }

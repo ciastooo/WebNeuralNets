@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebNeuralNets.Models.DB;
 
 namespace WebNeuralNets.Models.DB.Migrations
 {
     [DbContext(typeof(WebNeuralNetDbContext))]
-    partial class WebNeuralNetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181206201926_AddedTrainingIterations")]
+    partial class AddedTrainingIterations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

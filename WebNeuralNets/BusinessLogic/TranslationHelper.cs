@@ -7,15 +7,12 @@ namespace WebNeuralNets.BusinessLogic
 {
     public class TranslationHelper : ITranslationHelper
     {
-        private readonly Dictionary<LanguageCode, Dictionary<string, string>> _translations;
-        private readonly WebNeuralNetDbContext _c;
- 
+        private readonly Dictionary<LanguageCode, Dictionary<string, string>> _translations; 
 
         public TranslationHelper(WebNeuralNetDbContext dbContext)
         {
-            _c = dbContext;
-            var translationsQuery = dbContext.TranslationValues.GroupBy(t => t.LanguageCode).ToDictionary(gt => gt.Key, gt => gt.ToDictionary(tv => tv.Key, tv => tv.Value));
-            _translations = translationsQuery;
+            var translations = dbContext.TranslationValues.GroupBy(t => t.LanguageCode).ToDictionary(gt => gt.Key, gt => gt.ToDictionary(tv => tv.Key, tv => tv.Value));
+            _translations = translations;
         }
 
         public string GetTranslation(LanguageCode language, string key)

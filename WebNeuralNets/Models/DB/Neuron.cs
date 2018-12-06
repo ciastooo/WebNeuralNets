@@ -19,6 +19,7 @@ namespace WebNeuralNets.Models.DB
 
         public double Bias { get; set; }
 
+        [NotMapped]
         public double Delta { get; set; }
 
         [NotMapped]

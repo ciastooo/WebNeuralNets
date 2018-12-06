@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebNeuralNets.Models.DB
 {
@@ -13,6 +14,7 @@ namespace WebNeuralNets.Models.DB
 
         public double Weight { get; set; }
 
+        [NotMapped]
         public double Delta { get; set; }
 
         public Neuron NextNeuron { get; set; }

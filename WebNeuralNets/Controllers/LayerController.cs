@@ -45,11 +45,9 @@ namespace WebNeuralNets.Controllers
                     {
                         Id = n.Id,
                         Bias = n.Bias,
-                        Delta = n.Delta,
                         PreviousDendrites = n.PreviousDendrites.Select(d => new DendriteDto
                         {
                             Id = d.Id,
-                            Delta = d.Delta,
                             Weight = d.Weight,
                             NextNeuronId = d.NextNeuronId,
                             PreviousNeuronId = d.PreviousNeuronId
@@ -57,7 +55,6 @@ namespace WebNeuralNets.Controllers
                         NextDendrites = n.NextDendrites.Select(d => new DendriteDto
                         {
                             Id = d.Id,
-                            Delta = d.Delta,
                             Weight = d.Weight,
                             NextNeuronId = d.NextNeuronId,
                             PreviousNeuronId = d.PreviousNeuronId

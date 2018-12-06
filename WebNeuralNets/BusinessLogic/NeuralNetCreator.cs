@@ -22,7 +22,10 @@ namespace WebNeuralNets.BusinessLogic
             var neuralNet = new NeuralNet
             {
                 Name = neuralNetDto.Name,
-                TrainingRate = 0.5,
+                Description = neuralNetDto.Description,
+                TrainingRate = neuralNetDto.TrainingRate,
+                Training = false,
+                TrainingIterations = 0,
                 UserId = _httpContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value
             };
 
@@ -35,7 +38,7 @@ namespace WebNeuralNets.BusinessLogic
         {
             var layers = new List<Layer>();
 
-            if (neuralNet.Layers != null)
+            if (neuralNet.Layers != null && neuralNet.Layers.Count > 0)
             {
                 // TODO: copying existing last iteration to a new one
             }

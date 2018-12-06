@@ -6,8 +6,6 @@
 
         public double Weight { get; set; }
 
-        public double Delta { get; set; }
-
         public int NextNeuronId { get; set; }
 
         public int PreviousNeuronId { get; set; }

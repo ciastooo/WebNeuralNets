@@ -9,17 +9,17 @@ namespace WebNeuralNets.BusinessLogic
     {
         private readonly IActivationFunction _activationFunction;
 
-        NeuralNetTrainer(IActivationFunction activationFunction)
+        public NeuralNetTrainer(IActivationFunction activationFunction)
         {
             _activationFunction = activationFunction;
         }
 
-        public void Propagate(NeuralNet neuralNet, IList<double> input)
+        public double[] Propagate(NeuralNet neuralNet, double[] input)
         {
-            Propagate(neuralNet.Layers.OrderBy(l => l.Order).ToList(), input);
+           return Propagate(neuralNet.Layers.OrderBy(l => l.Order).ToList(), input);
         }
 
-        public void Propagate(IList<Layer> layers, IList<double> input)
+        public double[] Propagate(IList<Layer> layers, double[] input)
         {
             var inputLayer = layers.FirstOrDefault();
             var outputLayer = layers.LastOrDefault();
@@ -43,9 +43,11 @@ namespace WebNeuralNets.BusinessLogic
                     neuron.Value = _activationFunction.Count(neuron.Value);
                 }
             }
+
+            return layers.Last().Neurons.Select(n => n.Value).ToArray();
         }
 
-        public void Train(NeuralNet neuralNet, List<double> input, List<double> output)
+        public void Train(NeuralNet neuralNet, double[] input, double[] output)
         {
             Propagate(neuralNet, input);
             var layers = neuralNet.Layers.OrderBy(l => l.Order).ToList();
@@ -91,6 +93,8 @@ namespace WebNeuralNets.BusinessLogic
                     }
                 }
             }
+
+            neuralNet.TrainingIterations++;
         }
     }
 }

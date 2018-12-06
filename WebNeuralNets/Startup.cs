@@ -13,6 +13,8 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using WebNeuralNets.BusinessLogic;
+using WebNeuralNets.BusinessLogic.ActivationFunctions;
+using WebNeuralNets.BusinessLogic.BackgroundServices;
 using WebNeuralNets.Models.DB;
 
 namespace WebNeuralNets
@@ -51,7 +53,7 @@ namespace WebNeuralNets
                 opt.Password.RequireNonAlphanumeric = false;
                 opt.Password.RequireUppercase = false;
             });
-
+            
             services.AddScoped<INeuralNetCreator, NeuralNetCreator>();
 
             //Singletons
@@ -64,6 +66,11 @@ namespace WebNeuralNets
                     return new TranslationHelper(dbContext);
                 }
             });
+            services.AddSingleton<IActivationFunction, Sigmoid>();
+            services.AddSingleton<INeuralNetTrainer, NeuralNetTrainer>();
+
+
+            services.AddHostedService<NeuralNetTrainService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

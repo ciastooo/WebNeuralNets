@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WebNeuralNets.Models.DB
 {
@@ -104,5 +105,18 @@ namespace WebNeuralNets.Models.DB
                     e => JsonConvert.SerializeObject(e),
                     e => JsonConvert.DeserializeObject<IList<TrainingSet>>(e));
         }
+
+        public IList<NeuralNet> FetchNeuralnetsToTrain()
+        {
+            return NeuralNets.Where(nn => nn.Training && nn.TrainingData.Count > 0)
+                             .Include(nn => nn.TrainingData)
+                             .Include(nn => nn.Layers)
+                                .ThenInclude(l => l.Neurons)
+                                    .ThenInclude(n => n.PreviousDendrites)
+                             .Include(nn => nn.Layers)
+                                .ThenInclude(l => l.Neurons)
+                                    .ThenInclude(n => n.NextDendrites)
+                             .ToList();
+        } 
     }
 }

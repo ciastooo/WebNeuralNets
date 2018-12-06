@@ -5,8 +5,8 @@ namespace WebNeuralNets.BusinessLogic
 {
     public interface INeuralNetTrainer
     {
-        void Propagate(IList<Layer> layers, IList<double> input);
-        void Propagate(NeuralNet neuralNet, IList<double> input);
-        void Train(NeuralNet neuralNet, List<double> input, List<double> output);
+        double[] Propagate(IList<Layer> layers, double[] input);
+        double[] Propagate(NeuralNet neuralNet, double[] input);
+        void Train(NeuralNet neuralNet, double[] input, double[] output);
     }
 }
