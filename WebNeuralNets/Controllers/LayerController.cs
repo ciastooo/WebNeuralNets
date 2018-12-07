@@ -6,24 +6,27 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebNeuralNets.BusinessLogic;
 using WebNeuralNets.Models.DB;
 using WebNeuralNets.Models.Dto;
 
 namespace WebNeuralNets.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/NeuralNet/[controller]")]
     [ApiController]
     [Authorize]
     public class LayerController : ControllerBase
     {
         private readonly WebNeuralNetDbContext _dbContext;
+        private readonly INeuralNetCreator _neuralNetCreator;
 
-        public LayerController(WebNeuralNetDbContext dbContext)
+        public LayerController(WebNeuralNetDbContext dbContext, INeuralNetCreator neuralNetCreator)
         {
             _dbContext = dbContext;
+            _neuralNetCreator = neuralNetCreator;
         }
 
-        [HttpGet]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetIteration(int neuralNetId, int? iteration = null)
         {
             try
@@ -70,61 +73,37 @@ namespace WebNeuralNets.Controllers
             }
         }
 
-        //[HttpPut("NeuralNet/{id:int}")]
-        //public async Task<IActionResult> AddIteration(int neuralNetId, List<LayerDto> model)
-        //{
-        //    try
-        //    {
-        //        if(!ModelState.IsValid)
-        //        {
-        //            return BadRequest(ModelState);
-        //        }
+        [HttpPost("{id:int}")]
+        public async Task<IActionResult> UpdateLayers(int id, List<int> neuronsCount)
+        {
+            try
+            {
+                if (neuronsCount == null || neuronsCount.Count < 2 || neuronsCount.Any(n => n < 1))
+                {
+                    return BadRequest("VALIDATION_WRONGNEURONSCOUNT");
+                }
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var neuralNet = await _dbContext.NeuralNets.Where(nn => nn.Id == id && nn.UserId == userId).Include(nn => nn.Layers).Include(nn => nn.TrainingData).FirstOrDefaultAsync();
 
-        //        if(model == null || model.Count < 2)
-        //        {
-        //            return BadRequest("VALIDATION_LAYERSCOUNT");
-        //        }
+                if (neuralNet == null)
+                {
+                    return NotFound();
+                }
 
-        //        var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-        //        var neuralNet = await _dbContext.NeuralNets.Where(nn => nn.Id == neuralNetId && nn.UserId == userId).FirstOrDefaultAsync();
-        //        if(neuralNet == null)
-        //        {
-        //            return BadRequest("VALIDATION_NEURALNETINVALIDID");
-        //        }
+                _dbContext.Layers.RemoveRange(neuralNet.Layers);
+                _dbContext.TrainingData.RemoveRange(neuralNet.TrainingData);
 
-        //        var newIteration = neuralNet.Layers.Select(l => l.Iteration).OrderByDescending(l => l).FirstOrDefault() + 1;
+                var newLayers = _neuralNetCreator.CreateLayers(neuronsCount);
+                neuralNet.Layers = newLayers;
+                await _dbContext.SaveChangesAsync();
 
-        //        var dbModels = new List<Layer>();
-                
-        //        for(int i = 0; i < model.Count; i++)
-        //        {
-        //            var layer = model[i];
-        //            var dbModel = new Layer
-        //            {
-        //                NeuralNetId = neuralNet.Id,
-        //                Iteration = newIteration,
-        //                Order = i,
-        //                Neurons = new List<Neuron>()
-        //            };
-        //            if(layer.Neurons == null || layer.Neurons.Count < 1)
-        //            {
-        //                return BadRequest("VALIDATION_INVALIDNEURONCOUNT");
-        //            }
-        //            foreach(var neuron in layer.Neurons)
-        //            {
-        //                var dbNeuron = new Neuron
-        //                {
-        //                    Bias = neuron.Bias,
-        //                    Delta = neuron.Delta,
-        //                };
-                        
-        //            }
-        //        }
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        return BadRequest(ex);
-        //    }
-        //}
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
     }
 }

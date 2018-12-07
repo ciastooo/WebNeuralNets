@@ -29,20 +29,27 @@ namespace WebNeuralNets.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Add(NeuralNetDto model)
+        public async Task<IActionResult> Add(string name, double trainingRate, string description)
         {
             try
             {
-                if (ModelState.IsValid)
+                if (string.IsNullOrEmpty(name) || trainingRate < 0.01)
                 {
-                    var dbModel = _neuralNetCreator.CreateNeuralNet(model);
-                    await _dbcontext.NeuralNets.AddAsync(dbModel);
-                    await _dbcontext.SaveChangesAsync();
-
-                    model.Id = dbModel.Id;
-                    return Ok(model);
+                    return BadRequest();
                 }
-                return BadRequest(ModelState);
+
+                var model = new NeuralNetDto
+                {
+                    Name = name,
+                    Description = description,
+                    TrainingRate = trainingRate
+                };
+
+                var dbModel = _neuralNetCreator.CreateNeuralNet(model);
+                await _dbcontext.NeuralNets.AddAsync(dbModel);
+                await _dbcontext.SaveChangesAsync();
+
+                return Ok(dbModel);
             }
             catch (Exception ex)
             {
@@ -308,7 +315,7 @@ namespace WebNeuralNets.Controllers
         }
 
         [HttpPost("{id:int}/Train")]
-        public async Task<IActionResult> Update(int id)
+        public async Task<IActionResult> Train(int id)
         {
             try
             {
@@ -350,8 +357,6 @@ namespace WebNeuralNets.Controllers
             }
         }
 
-
-
         [HttpDelete("{id:int}/TrainingData/{setId:int}")]
         public async Task<IActionResult> GetTrainingData(int id, int setId)
         {
@@ -368,6 +373,31 @@ namespace WebNeuralNets.Controllers
                 await _dbcontext.SaveChangesAsync();
 
                 return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPost("Dendrite/{id:int}")]
+        public async Task<IActionResult> UpdateWeight(int id, double newWeight)
+        {
+            try
+            {
+                var dbModel = await _dbcontext.Dendrites.Where(d => d.Id == id).FirstOrDefaultAsync();
+
+                if (dbModel == null)
+                {
+                    return NotFound();
+                }
+
+                dbModel.Weight = newWeight;
+
+                await _dbcontext.SaveChangesAsync();
+
+                return Ok();
+
             }
             catch (Exception ex)
             {

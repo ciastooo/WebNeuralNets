@@ -5,6 +5,7 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using WebNeuralNets.BusinessLogic;
 using Moq;
+using WebNeuralNets.Models.DB;
 using WebNeuralNets.Models.Enums;
 
 namespace GroupProjectBackend.Tests
@@ -13,6 +14,7 @@ namespace GroupProjectBackend.Tests
     public class TranslationControllerTests
     {
         private readonly ITranslationHelper _translationHelper;
+        private readonly WebNeuralNetDbContext _dbContext;
 
         public TranslationControllerTests()
         {
@@ -21,6 +23,7 @@ namespace GroupProjectBackend.Tests
             translationHelper.Setup(x => x.GetTranslation(LanguageCode.ENG, "ENGtest")).Returns("English testing");
             translationHelper.Setup(x => x.GetTranslation(LanguageCode.PL, "PLtest")).Returns("Polskie testowanie");
             _translationHelper = translationHelper.Object;
+            _dbContext = new Mock<WebNeuralNetDbContext>().Object;
         }
 
         [Test]
@@ -33,7 +36,7 @@ namespace GroupProjectBackend.Tests
         public void GetTranslation_WhenLanguageCodeAndKeyIsPassed_ShouldReturnExpectedValue(LanguageCode languageCode, string key, string expectedResult)
         {
             // Arrange
-            var controller = new TranslationController(_translationHelper);
+            var controller = new TranslationController(_translationHelper, _dbContext);
 
             // Act
             var response = controller.GetTranslation(key, languageCode) as ObjectResult;

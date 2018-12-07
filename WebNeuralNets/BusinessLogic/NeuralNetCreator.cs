@@ -36,25 +36,21 @@ namespace WebNeuralNets.BusinessLogic
 
         public virtual IList<Layer> CreateLayerIteration(NeuralNet neuralNet)
         {
+            var layers = CreateLayers(new List<int> {2, 3, 3, 1});
+
+            return layers;
+        }
+        
+        public virtual IList<Layer> CreateLayers(List<int> neuronsCount)
+        {
             var layers = new List<Layer>();
 
-            if (neuralNet.Layers != null && neuralNet.Layers.Count > 0)
+            Layer previousLayer = null;
+            for (int i = 0; i < neuronsCount.Count; i++)
             {
-                // TODO: copying existing last iteration to a new one
-            }
-            else
-            {
-                var inputLayer = CreateLayer(0, 0, 2, null);
-                var firstHiddenLayer = CreateLayer(0, 1, 3, inputLayer);
-                var secondHiddenLayer = CreateLayer(0, 2, 3, firstHiddenLayer);
-                var outputLayer = CreateLayer(0, 3, 1, secondHiddenLayer);
-                layers = new List<Layer>
-                {
-                    inputLayer,
-                    firstHiddenLayer,
-                    secondHiddenLayer,
-                    outputLayer
-                };
+                var layer = CreateLayer(0, i, neuronsCount[i], previousLayer);
+                previousLayer = layer;
+                layers.Add(layer);
             }
 
             return layers;

@@ -108,6 +108,7 @@ namespace WebNeuralNets.Models.DB
 
         public IList<NeuralNet> FetchNeuralnetsToTrain()
         {
+            //NeuralNets.FromSql()
             return NeuralNets.Where(nn => nn.Training && nn.TrainingData.Count > 0)
                              .Include(nn => nn.TrainingData)
                              .Include(nn => nn.Layers)

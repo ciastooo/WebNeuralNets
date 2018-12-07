@@ -22,7 +22,6 @@ namespace WebNeuralNets.BusinessLogic
         public double[] Propagate(IList<Layer> layers, double[] input)
         {
             var inputLayer = layers.FirstOrDefault();
-            var outputLayer = layers.LastOrDefault();
 
             int i = 0;
             foreach(var neuron in inputLayer.Neurons)
@@ -51,7 +50,6 @@ namespace WebNeuralNets.BusinessLogic
         {
             Propagate(neuralNet, input);
             var layers = neuralNet.Layers.OrderBy(l => l.Order).ToList();
-            var inputLayer = layers.FirstOrDefault();
             var outputLayer = layers.LastOrDefault();
 
             int i = 0;
