@@ -71,7 +71,8 @@ namespace WebNeuralNets.Controllers
                     Description = n.Description,
                     Iterations = n.Layers.GroupBy(l => l.Iteration).Count(),
                     TrainingIterations = n.TrainingIterations,
-                    TrainingRate = n.TrainingRate
+                    TrainingRate = n.TrainingRate,
+                    AverageError = n.AverageError
                 }).ToListAsync();
 
                 return Ok(result);
@@ -99,6 +100,7 @@ namespace WebNeuralNets.Controllers
                         Iterations = nn.Layers.GroupBy(l => l.Iteration).Count(),
                         Training = nn.Training,
                         TrainingIterations = nn.TrainingIterations,
+                        AverageError = nn.AverageError,
                         TrainingData = nn.TrainingData.Select(td => new TrainingDataDto
                         {
                             Id = td.Id,

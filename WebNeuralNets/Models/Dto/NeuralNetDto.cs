@@ -12,6 +12,7 @@ namespace WebNeuralNets.Models.Dto
 
         public string Description { get; set; }
 
+        [Required(ErrorMessage = "Validation_FieldRequired")]
         public double TrainingRate { get; set; }
 
         public int Iterations { get; set; }
@@ -19,6 +20,8 @@ namespace WebNeuralNets.Models.Dto
         public bool Training { get; set; }
 
         public int TrainingIterations { get; set; }
+
+        public double AverageError { get; set; }
 
         public List<LayerDto> Layers { get; set; }
 

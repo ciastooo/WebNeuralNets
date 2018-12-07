@@ -29,6 +29,8 @@ namespace WebNeuralNets.Models.DB
 
         public int TrainingIterations { get; set; }
 
+        public double AverageError { get; set; }
+
         public virtual ApplicationUser User { get; set; }
 
         public ICollection<Layer> Layers { get; set; }
