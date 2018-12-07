@@ -74,19 +74,22 @@ namespace WebNeuralNets.Models.DB
                 .HasOne(e => e.NeuralNet)
                 .WithMany(e => e.Layers)
                 .HasForeignKey(e => e.NeuralNetId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
 
 
             modelBuilder.Entity<Neuron>()
                 .HasOne(e => e.Layer)
                 .WithMany(e => e.Neurons)
                 .HasForeignKey(e => e.LayerId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Neuron>()
                 .HasMany(e => e.PreviousDendrites)
                 .WithOne(e => e.NextNeuron)
                 .HasForeignKey(e => e.NextNeuronId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Neuron>()
                 .HasMany(e => e.NextDendrites)
                 .WithOne(e => e.PreviousNeuron)
@@ -98,7 +101,8 @@ namespace WebNeuralNets.Models.DB
                 .HasOne(e => e.NeuralNet)
                 .WithMany(e => e.TrainingData)
                 .HasForeignKey(e => e.NeuralNetId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<TrainingData>()
                 .Property(e => e.TrainingSet)
                 .HasConversion(

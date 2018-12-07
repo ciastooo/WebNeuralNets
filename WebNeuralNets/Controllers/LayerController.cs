@@ -27,12 +27,12 @@ namespace WebNeuralNets.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetIteration(int neuralNetId, int? iteration = null)
+        public async Task<IActionResult> GetIteration(int id, int? iteration = null)
         {
             try
             {
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                var query = _dbContext.Layers.Where(l => l.NeuralNetId == neuralNetId && l.NeuralNet.UserId == userId);
+                var query = _dbContext.Layers.Where(l => l.NeuralNetId == id && l.NeuralNet.UserId == userId);
                 if(iteration.HasValue)
                 {
                     query = query.Where(l => l.Iteration == iteration.Value);

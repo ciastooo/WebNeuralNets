@@ -21,8 +21,6 @@ namespace WebNeuralNets.Models.Dto
 
         public int TrainingIterations { get; set; }
 
-        public double AverageError { get; set; }
-
         public List<LayerDto> Layers { get; set; }
 
         public List<TrainingDataDto> TrainingData { get; set; }

@@ -31,12 +31,16 @@ namespace WebNeuralNets.BusinessLogic.BackgroundServices
                         var toTrain = dbContext.FetchNeuralnetsToTrain();
                         foreach (var neuralNet in toTrain)
                         {
-                            foreach (var trainingData in neuralNet.TrainingData)
+                            for (int i = 0; i < 1000; i++)
                             {
-                                foreach (var trainingSet in trainingData.TrainingSet)
+                                foreach (var trainingData in neuralNet.TrainingData)
                                 {
-                                    _neuralNetTrainer.Train(neuralNet, trainingSet.Input.ToArray(), trainingSet.Output.ToArray());
+                                    foreach (var trainingSet in trainingData.TrainingSet)
+                                    {
+                                        _neuralNetTrainer.Train(neuralNet, trainingSet.Input.ToArray(), trainingSet.Output.ToArray());
+                                    }
                                 }
+                                neuralNet.TrainingIterations += 1;
                             }
                         }
                         dbContext.SaveChanges();

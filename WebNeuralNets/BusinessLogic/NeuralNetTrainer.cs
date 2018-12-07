@@ -53,11 +53,9 @@ namespace WebNeuralNets.BusinessLogic
             var outputLayer = layers.LastOrDefault();
 
             int i = 0;
-
             foreach (var outputNeuron in outputLayer.Neurons)
             {
                 var error = outputNeuron.Value - output[i];
-                neuralNet.AverageError += error;
                 outputNeuron.Delta = error * _activationFunction.Derivative(outputNeuron.Value);
                 foreach(var previousDendrite in outputNeuron.PreviousDendrites)
                 {
@@ -65,8 +63,6 @@ namespace WebNeuralNets.BusinessLogic
                 }
                 i++;
             }
-
-            neuralNet.AverageError = neuralNet.AverageError / output.Length;
 
             for(i = layers.Count - 2; i > 0; i--)
             {
@@ -96,8 +92,6 @@ namespace WebNeuralNets.BusinessLogic
                     }
                 }
             }
-
-            neuralNet.TrainingIterations++;
         }
     }
 }
