@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -195,8 +196,12 @@ namespace WebNeuralNets.Controllers
                     return NotFound();
                 }
 
-                _dbcontext.NeuralNets.Remove(dbModel);
-                await _dbcontext.SaveChangesAsync();
+                var userIdParam = new SqlParameter("@userId", userId);
+                var idParam = new SqlParameter("@id", id);
+
+                await _dbcontext.Database.ExecuteSqlCommandAsync(@"
+                    DELETE FROM NeuralNets WHERE id=@id AND userId=@userId
+                ", idParam, userIdParam);
 
                 return NoContent();
             }
@@ -396,10 +401,11 @@ namespace WebNeuralNets.Controllers
 
                 dbModel.Weight = newWeight;
 
-                await _dbcontext.SaveChangesAsync();
+                var weightparam = new SqlParameter("@weight", newWeight);
+                var idParam = new SqlParameter("@id", id);
+                await _dbcontext.Database.ExecuteSqlCommandAsync("UPDATE Dendrites SET Weight=@weight WHERE Id = @id", weightparam, idParam);
 
                 return Ok();
-
             }
             catch (Exception ex)
             {
