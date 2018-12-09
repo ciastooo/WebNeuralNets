@@ -28,7 +28,7 @@ namespace WebNeuralNets.BusinessLogic.BackgroundServices
                     using (var scope = _serviceProvider.CreateScope())
                     {
                         var dbContext = scope.ServiceProvider.GetService<WebNeuralNetDbContext>();
-                        var toTrain = dbContext.FetchNeuralnetsToTrain();
+                        var toTrain = await dbContext.FetchNeuralnetsToTrain();
                         foreach (var neuralNet in toTrain)
                         {
                             for (int i = 0; i < 1000; i++)
@@ -43,7 +43,7 @@ namespace WebNeuralNets.BusinessLogic.BackgroundServices
                                 neuralNet.TrainingIterations += 1;
                             }
                         }
-                        dbContext.SaveChanges();
+                        await dbContext.SaveChangesAsync();
                     }
                 }
                 catch (Exception ex)

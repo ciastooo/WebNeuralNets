@@ -55,16 +55,15 @@ namespace WebNeuralNets.BusinessLogic
             int i = 0;
             foreach (var outputNeuron in outputLayer.Neurons)
             {
-                var error = outputNeuron.Value - output[i];
-                outputNeuron.Delta = error * _activationFunction.Derivative(outputNeuron.Value);
-                foreach(var previousDendrite in outputNeuron.PreviousDendrites)
+                outputNeuron.Delta = (outputNeuron.Value - output[i]) * _activationFunction.Derivative(outputNeuron.Value);
+                foreach (var previousDendrite in outputNeuron.PreviousDendrites)
                 {
                     previousDendrite.Delta = outputNeuron.Delta * previousDendrite.PreviousNeuron.Value;
                 }
                 i++;
             }
 
-            for(i = layers.Count - 2; i > 0; i--)
+            for(i = layers.Count - 2; i >= 0; i--)
             {
                 var layer = layers[i];
                 foreach(var neuron in layer.Neurons)

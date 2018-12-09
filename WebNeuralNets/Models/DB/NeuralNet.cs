@@ -35,4 +35,22 @@ namespace WebNeuralNets.Models.DB
 
         public ICollection<TrainingData> TrainingData { get; set; }
     }
+
+    public class QueryNeuralNet
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        public double TrainingRate { get; set; }
+
+        public bool Training { get; set; }
+
+        public int TrainingIterations { get; set; }
+
+        public int LayersCount { get; set; }
+        public int NeuronsCount { get; set; }
+    }
 }

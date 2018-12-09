@@ -53,7 +53,7 @@ namespace WebNeuralNets
                 opt.Password.RequireNonAlphanumeric = false;
                 opt.Password.RequireUppercase = false;
             });
-            
+
             services.AddScoped<INeuralNetCreator, NeuralNetCreator>();
 
             //Singletons
@@ -86,6 +86,7 @@ namespace WebNeuralNets
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
+            app.UseCors();
             app.UseMvc();
         }
     }

@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace WebNeuralNets.Models.DB
 {
@@ -24,6 +26,7 @@ namespace WebNeuralNets.Models.DB
         public DbSet<Dendrite> Dendrites { get; set; }
         public DbSet<Neuron> Neurons { get; set; }
         public DbSet<TrainingData> TrainingData { get; set; }
+        public DbQuery<QueryNeuralNet> NeuralNetQuery { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -110,7 +113,7 @@ namespace WebNeuralNets.Models.DB
                     e => JsonConvert.DeserializeObject<IList<TrainingSet>>(e));
         }
 
-        public IList<NeuralNet> FetchNeuralnetsToTrain()
+        public Task<List<NeuralNet>> FetchNeuralnetsToTrain()
         {
             //NeuralNets.FromSql()
             return NeuralNets.Where(nn => nn.Training && nn.TrainingData.Count > 0)
@@ -121,7 +124,28 @@ namespace WebNeuralNets.Models.DB
                              .Include(nn => nn.Layers)
                                 .ThenInclude(l => l.Neurons)
                                     .ThenInclude(n => n.NextDendrites)
-                             .ToList();
+                             .ToListAsync();
         } 
+
+        public List<QueryNeuralNet> FetchNeuralNets(string userId)
+        {
+            var user = new SqlParameter("@userId", userId);
+            return NeuralNetQuery.FromSql(@"
+                  SELECT nn.[Id]
+                      ,nn.[Name]
+                      ,nn.[Description]
+                      ,nn.[TrainingRate]
+                      ,nn.[Training]
+                      ,nn.[TrainingIterations]
+	                  ,l.LayersCount
+	                  ,(SELECT COUNT(*) FROM Neurons n Where n.LayerId IN (SELECT l.Id FROM Layers l WHERE l.NeuralNetId = nn.Id)) as NeuronsCount
+                  FROM [WebNeuralNets].[dbo].[NeuralNets] nn
+                  LEFT OUTER JOIN
+	                  (SELECT l.NeuralNetId, Count(*) as LayersCount
+	                  FROM Layers l
+	                  Group By l.NeuralNetId)
+                  l on nn.id = l.NeuralNetId
+                  WHERE nn.[UserId] = @userId", user).ToList();
+        }
     }
 }

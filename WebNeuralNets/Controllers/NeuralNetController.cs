@@ -63,17 +63,18 @@ namespace WebNeuralNets.Controllers
             try
             {
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var result = _dbcontext.FetchNeuralNets(userId);
 
-                var result = await _dbcontext.NeuralNets.Where(n => n.UserId == userId).Select(n => new NeuralNetDto
-                {
-                    Id = n.Id,
-                    Name = n.Name,
-                    Description = n.Description,
-                    Iterations = n.Layers.GroupBy(l => l.Iteration).Count(),
-                    TrainingIterations = n.TrainingIterations,
-                    TrainingRate = n.TrainingRate,
-                    Training = n.Training
-                }).ToListAsync();
+                //var result = await _dbcontext.NeuralNets.Where(n => n.UserId == userId).Select(n => new NeuralNetDto
+                //{
+                //    Id = n.Id,
+                //    Name = n.Name,
+                //    Description = n.Description,
+                //    Iterations = n.Layers.GroupBy(l => l.Iteration).Count(),
+                //    TrainingIterations = n.TrainingIterations,
+                //    TrainingRate = n.TrainingRate,
+                //    Training = n.Training
+                //}).ToListAsync();
 
                 return Ok(result);
             }

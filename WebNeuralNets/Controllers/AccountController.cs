@@ -63,7 +63,7 @@ namespace GroupProjectBackend.Controllers
                 {
                     return BadRequest("Already logged in");
                 }
-                var loginResult = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
+                var loginResult = await _signInManager.PasswordSignInAsync(model.Username, model.Password, true, false);
                 if (loginResult.Succeeded)
                 {
                     var user = await _userManager.FindByNameAsync(model.Username);
