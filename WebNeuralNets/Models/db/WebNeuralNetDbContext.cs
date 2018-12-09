@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using WebNeuralNets.Models.Dto;
 
 namespace WebNeuralNets.Models.DB
 {

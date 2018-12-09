@@ -74,7 +74,7 @@ namespace WebNeuralNets
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseSession();
-            app.UseMvc();
+            app.UseMvcWithDefaultRoute();
         }
     }
 }
