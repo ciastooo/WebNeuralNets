@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebNeuralNets.BusinessLogic;
@@ -30,7 +29,7 @@ namespace WebNeuralNets.Controllers
         {
             try
             {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var userId = HttpContext.Session.GetString("_id");
                 var query = _dbContext.Layers.Where(l => l.NeuralNetId == id && l.NeuralNet.UserId == userId);
                 if(iteration.HasValue)
                 {
@@ -81,7 +80,7 @@ namespace WebNeuralNets.Controllers
                 {
                     return BadRequest("VALIDATION_WRONGNEURONSCOUNT");
                 }
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var userId = HttpContext.Session.GetString("_id");
                 var neuralNet = await _dbContext.NeuralNets.Where(nn => nn.Id == id && nn.UserId == userId).Include(nn => nn.Layers).Include(nn => nn.TrainingData).FirstOrDefaultAsync();
 
                 if (neuralNet == null)

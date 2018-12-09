@@ -26,8 +26,8 @@ namespace WebNeuralNets.BusinessLogic
                 TrainingRate = neuralNetDto.TrainingRate,
                 Training = false,
                 TrainingIterations = 0,
-                UserId = _httpContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value
-            };
+                UserId = _httpContext.HttpContext.Session.GetString("_id")
+        };
 
             neuralNet.Layers = CreateLayerIteration(neuralNet);
 

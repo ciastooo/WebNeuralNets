@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -62,7 +63,7 @@ namespace WebNeuralNets.Controllers
         {
             try
             {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var userId = HttpContext.Session.GetString("_id");
                 var result = _dbcontext.FetchNeuralNets(userId);
 
                 //var result = await _dbcontext.NeuralNets.Where(n => n.UserId == userId).Select(n => new NeuralNetDto
@@ -91,7 +92,7 @@ namespace WebNeuralNets.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                    var userId = HttpContext.Session.GetString("_id");
                     var result = await _dbcontext.NeuralNets.Where(nn => nn.Id == id && nn.UserId == userId).Select(nn => new NeuralNetDto
                     {
                         Id = nn.Id,
@@ -158,7 +159,7 @@ namespace WebNeuralNets.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                    var userId = HttpContext.Session.GetString("_id");
                     var dbModel = await _dbcontext.NeuralNets.Where(n => n.Id == model.Id && n.UserId == userId).FirstOrDefaultAsync();
 
                     if (dbModel == null)
@@ -187,7 +188,7 @@ namespace WebNeuralNets.Controllers
         {
             try
             {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var userId = HttpContext.Session.GetString("_id");
                 var dbModel = await _dbcontext.NeuralNets.Where(n => n.Id == id && n.UserId == userId).FirstOrDefaultAsync();
 
                 if (dbModel == null)
@@ -217,7 +218,7 @@ namespace WebNeuralNets.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                    var userId = HttpContext.Session.GetString("_id");
                     var neuralNet = await _dbcontext.NeuralNets.Include(nn => nn.Layers)
                                                                     .ThenInclude(l => l.Neurons)
                                                                     .ThenInclude(n => n.PreviousDendrites)
@@ -257,7 +258,7 @@ namespace WebNeuralNets.Controllers
                 {
                     return BadRequest("VALIDATION_INVALIDTRAININGDATA");
                 }
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var userId = HttpContext.Session.GetString("_id");
                 var neuralNet = await _dbcontext.NeuralNets.Include(nn => nn.Layers).ThenInclude(l => l.Neurons).Where(nn => nn.Id == id && nn.UserId == userId).FirstOrDefaultAsync();
                 if (neuralNet == null)
                 {
@@ -299,7 +300,7 @@ namespace WebNeuralNets.Controllers
         {
             try
             {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var userId = HttpContext.Session.GetString("_id");
                 var trainingData = await _dbcontext.TrainingData.Where(t => t.NeuralNetId == id && t.NeuralNet.UserId == userId)
                                                                 .Select(t => new TrainingDataDto
                                                                 {
@@ -325,7 +326,7 @@ namespace WebNeuralNets.Controllers
         {
             try
             {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var userId = HttpContext.Session.GetString("_id");
                 var dbModel = await _dbcontext.NeuralNets.Where(n => n.Id == id && n.UserId == userId).FirstOrDefaultAsync();
 
                 if (dbModel == null)
@@ -351,7 +352,7 @@ namespace WebNeuralNets.Controllers
         {
             try
             {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var userId = HttpContext.Session.GetString("_id");
                 var result = await _dbcontext.NeuralNets.Where(n => n.UserId == userId && n.Training).Select(nn => nn.Id).ToListAsync();
 
                 return Ok(result);
@@ -368,7 +369,7 @@ namespace WebNeuralNets.Controllers
         {
             try
             {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var userId = HttpContext.Session.GetString("_id");
                 var trainingData = await _dbcontext.TrainingData.Where(t => t.Id == setId && t.NeuralNetId == id && t.NeuralNet.UserId == userId).FirstOrDefaultAsync();
                 if (trainingData == null)
                 {

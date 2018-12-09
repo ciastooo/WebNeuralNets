@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -91,7 +92,7 @@ namespace WebNeuralNets.Controllers
 
         private async Task<NeuralNetDto> GetNeuralNet(int id)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = HttpContext.Session.GetString("_id");
             return await _dbcontext.NeuralNets.Where(nn => nn.Id == id && nn.UserId == userId).Select(nn => new NeuralNetDto
             {
                 Id = nn.Id,
