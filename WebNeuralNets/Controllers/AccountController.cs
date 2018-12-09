@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using System;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using WebNeuralNets.Models.DB;
 using WebNeuralNets.Models.Dto;
+using WebNeuralNets.BusinessLogic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace GroupProjectBackend.Controllers
 {
@@ -13,13 +14,11 @@ namespace GroupProjectBackend.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly WebNeuralNetDbContext _dbContext;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(WebNeuralNetDbContext dbContext)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _dbContext = dbContext;
         }
 
         [HttpPost]
@@ -28,24 +27,26 @@ namespace GroupProjectBackend.Controllers
         {
             try
             {
-                if (_signInManager.IsSignedIn(User))
-                {
-                    return BadRequest("Already logged in");
-                }
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
+
                 var user = new ApplicationUser
                 {
-                    UserName = model.Username
+                    Id = Guid.NewGuid().ToString(),
+                    UserName = model.Username,
+                    PasswordHash = PasswordManager.GenerateSaltedHash(model.Password, model.Username.ToUpperInvariant())
                 };
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    return Ok("Registered");
-                }
-                return BadRequest(result.Errors);
+
+                await _dbContext.ApplicationUsers.AddAsync(user);
+                await _dbContext.SaveChangesAsync();
+
+                HttpContext.Session.Clear();
+                HttpContext.Response.Cookies.Append("id", user.Id);
+                HttpContext.Session.SetString("_userName", model.Username);
+                HttpContext.Session.SetString("_id", user.Id.ToString());
+                return Ok("Registered");
             }
             catch (Exception ex)
             {
@@ -59,22 +60,27 @@ namespace GroupProjectBackend.Controllers
         {
             try
             {
-                if(_signInManager.IsSignedIn(User))
+                if (HttpContext.Session.TryGetValue("_id", out var userId))
                 {
                     return BadRequest("Already logged in");
                 }
-                var loginResult = await _signInManager.PasswordSignInAsync(model.Username, model.Password, true, false);
-                if (loginResult.Succeeded)
+                if (!ModelState.IsValid)
                 {
-                    var user = await _userManager.FindByNameAsync(model.Username);
-                    var result = new LoginModelDto
-                    {
-                        Id = user.Id,
-                        Username = user.UserName
-                    };
-                    return Ok(result);
+                    return BadRequest(ModelState);
                 }
-                return BadRequest("Couldn't log in");
+                var passwordHash = PasswordManager.GenerateSaltedHash(model.Password, model.Username.ToUpperInvariant());
+
+                var user = await _dbContext.ApplicationUsers.Where(u => u.UserName == model.Username && u.PasswordHash == passwordHash).FirstOrDefaultAsync();
+                if (user == null)
+                {
+                    return BadRequest("Couldn't log in");
+                }
+
+                HttpContext.Session.Clear();
+                HttpContext.Response.Cookies.Append("id", user.Id);
+                HttpContext.Session.SetString("_userName", model.Username);
+                HttpContext.Session.SetString("_id", user.Id.ToString());
+                return Ok("Logged in");
             }
             catch (Exception ex)
             {
@@ -82,27 +88,30 @@ namespace GroupProjectBackend.Controllers
             }
         }
 
-        [Authorize]
         [HttpGet]
         [Route("Logout")]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
+            HttpContext.Session.Clear();
             return Ok();
         }
 
-        [Authorize]
         [HttpGet]
         [Route("IsAuthenticated")]
         public async Task<IActionResult> IsAuthenticated()
         {
-            var user = await _userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var result = new LoginModelDto
+            var userId = HttpContext.Session.GetString("_id");
+            var userName = HttpContext.Session.GetString("_userName");
+            if (!string.IsNullOrEmpty(userId) && !string.IsNullOrEmpty(userName))
             {
-                Id = user.Id,
-                Username = user.UserName
-            };
-            return Ok(result);
+                var result = new LoginModelDto
+                {
+                    Id = userId,
+                    Username = userName
+                };
+                return Ok(result);
+            }
+            return Unauthorized();
         }
     }
 }

@@ -17,7 +17,6 @@ namespace WebNeuralNets.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class ExportController : ControllerBase
     {
         private readonly WebNeuralNetDbContext _dbcontext;

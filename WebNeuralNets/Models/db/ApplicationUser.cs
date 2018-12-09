@@ -1,25 +1,23 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using WebNeuralNets.Models.Enums;
 
 namespace WebNeuralNets.Models.DB
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser
     {
         public ApplicationUser()
         {
-            Roles = new HashSet <IdentityUserRole<string>>();
-            Claims = new List<IdentityUserClaim<string>>();
-            Logins = new List<IdentityUserLogin<string>>();
             NeuralNets = new List<NeuralNet>();
         }
 
+        [Required]
+        public string Id { get; set; }
+        [Required]
+        public string UserName { get; set; }
+        [Required]
+        public string PasswordHash { get; set; }
         public LanguageCode LanguageCode { get; set; }
-
-        public virtual ICollection<IdentityUserRole<string>> Roles { get; }
-        public virtual ICollection<IdentityUserClaim<string>> Claims { get; }
-        public virtual ICollection<IdentityUserLogin<string>> Logins { get; }
         public virtual ICollection<NeuralNet> NeuralNets { get; }
     }
 }

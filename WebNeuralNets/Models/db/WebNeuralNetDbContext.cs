@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -8,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WebNeuralNets.Models.DB
 {
-    public class WebNeuralNetDbContext : IdentityDbContext<ApplicationUser>
+    public class WebNeuralNetDbContext : DbContext
     {
         public WebNeuralNetDbContext(DbContextOptions options) : base(options)
         {
@@ -19,7 +18,6 @@ namespace WebNeuralNets.Models.DB
         }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        public DbSet<ApplicationRole> ApplicationRoles { get; set; }
         public DbSet<TranslationValue> TranslationValues { get; set; }
         public DbSet<NeuralNet> NeuralNets { get; set; }
         public DbSet<Layer> Layers { get; set; }
@@ -31,32 +29,6 @@ namespace WebNeuralNets.Models.DB
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<ApplicationUser>().Ignore(x => x.PhoneNumber);
-            modelBuilder.Entity<ApplicationUser>().Ignore(x => x.PhoneNumberConfirmed);
-            modelBuilder.Entity<ApplicationUser>().Ignore(x => x.Email);
-            modelBuilder.Entity<ApplicationUser>().Ignore(x => x.EmailConfirmed);
-            modelBuilder.Entity<ApplicationUser>().Ignore(x => x.NormalizedEmail);
-            modelBuilder.Entity<ApplicationUser>().Ignore(x => x.TwoFactorEnabled);
-            modelBuilder.Entity<ApplicationUser>()
-                .HasMany(e => e.Claims)
-                .WithOne()
-                .HasForeignKey(e => e.UserId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<ApplicationUser>()
-                .HasMany(e => e.Logins)
-                .WithOne()
-                .HasForeignKey(e => e.UserId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<ApplicationUser>()
-                .HasMany(e => e.Roles)
-                .WithOne()
-                .HasForeignKey(e => e.UserId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
-
 
             modelBuilder.Entity<TranslationValue>()
                .HasKey(t => new
