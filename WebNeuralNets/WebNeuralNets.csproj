@@ -22,7 +22,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <Content Remove="Views\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Index.cshtml" />
+    <None Include="wwwroot\css\side-menu.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="wwwroot\js\ui.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
