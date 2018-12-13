@@ -120,5 +120,7 @@ namespace WebNeuralNets.Models.DB
                   l on nn.id = l.NeuralNetId
                   WHERE nn.[UserId] = @userId", user).ToList();
         }
+
+        public DbSet<WebNeuralNets.Models.Dto.LoginModelDto> LoginModelDto { get; set; }
     }
 }

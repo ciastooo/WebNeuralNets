@@ -47,8 +47,7 @@ namespace WebNeuralNets
             services.AddSingleton<IActivationFunction, Sigmoid>();
             services.AddSingleton<INeuralNetTrainer, NeuralNetTrainer>();
 
-
-            services.AddHostedService<NeuralNetTrainService>();
+            //services.AddHostedService<NeuralNetTrainService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

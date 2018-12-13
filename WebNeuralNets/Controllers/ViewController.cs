@@ -17,5 +17,14 @@ namespace WebNeuralNets.Controllers
             return View("~/Views/Index.cshtml");
         }
 
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
     }
 }

@@ -23,14 +23,16 @@
 
   <ItemGroup>
     <Content Remove="Views\Index.cshtml" />
+    <Content Remove="Views\_layout.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Views\Index.cshtml" />
-    <None Include="wwwroot\css\side-menu.css">
+    <None Include="Views\_layout.cshtml" />
+    <None Include="wwwroot\css\style.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="wwwroot\js\ui.js">
+    <None Include="wwwroot\js\script.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

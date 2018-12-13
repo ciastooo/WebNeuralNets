@@ -13,7 +13,7 @@ namespace GroupProjectBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : BaseController
+    public class AccountController : ControllerBase
     {
         private readonly WebNeuralNetDbContext _dbContext;
 
@@ -93,6 +93,7 @@ namespace GroupProjectBackend.Controllers
         [Route("Logout")]
         public async Task<IActionResult> Logout()
         {
+            HttpContext.Response.Cookies.Delete("id");
             HttpContext.Session.Clear();
             return Ok();
         }

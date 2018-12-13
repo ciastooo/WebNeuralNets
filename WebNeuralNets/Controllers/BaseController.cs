@@ -11,12 +11,10 @@ namespace WebNeuralNets.Controllers
     {
         private readonly string _requestLanugage;
 
-        private readonly ITranslationHelper _translationHelper;
 
-        public BaseController(ITranslationHelper translationHelper)
+        public BaseController()
         {
             _requestLanugage = Request.HttpContext.Features.Get<IRequestCultureFeature>().RequestCulture.Culture.EnglishName;
-            _translationHelper = translationHelper;
         }
 
         //private bool IsLoggedIn()
