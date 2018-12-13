@@ -4,8 +4,6 @@
     var menu = document.getElementById('menu');
     var menuLink = document.getElementById('menuLink');
     var content = document.getElementById('main');
-    var menuLoggedInLinks = document.getElementById('loggedIn');
-    var menuNotLoggedInLinks = document.getElementById('notLoggedIn');
 
     var translations = [];
 
@@ -33,7 +31,9 @@
         for (let i = 0; i < toTranslate.length; i++) {
             let elem = toTranslate[i];
             var key = elem.innerHTML;
-
+            if (!key) {
+                key = elem.value;
+            }
             if (translations[key]) {
                 elem.innerHTML = translations[key];
             } else {
@@ -42,7 +42,11 @@
                         response.text().then(text => {
                             if (text) {
                                 translations[key] = text;
-                                elem.innerHTML = text;
+                                if (elem.innerHTML) {
+                                    elem.innerHTML = text;
+                                } else {
+                                    elem.value = text;
+                                }
                             }
                         });
                     }
@@ -74,7 +78,7 @@
     function getLanugage() {
         let language = getCookie("lang");
         if (language)
-            return lanugage;
+            return language;
         return "ENG";
     }
 
@@ -87,7 +91,7 @@
             },
             body: JSON.stringify(language)
         }).then(response => {
-            console.error(response);
+            document.location.reload();
         }).catch(err => {
             console.error(err);
         });
@@ -113,10 +117,14 @@
 
     document.getElementById("logoutLink").onclick = logOut;
 
+    document.getElementById("langPL").onclick = function () { return setLanguage("PL") };
+    document.getElementById("langENG").onclick = function () { return setLanguage("ENG") };
+
     if (getCookie("id")) {
-        menuLoggedInLinks.classList.remove("hidden");
+        document.getElementById('loggedIn').classList.remove("hidden");
+        document.getElementById('footerLoggedIn').classList.remove("hidden");
     } else {
-        menuNotLoggedInLinks.classList.remove("hidden");
+        document.getElementById('notLoggedIn').classList.remove("hidden");
     }
 
     translateAll();
