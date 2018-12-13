@@ -8,6 +8,7 @@ using WebNeuralNets.BusinessLogic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using WebNeuralNets.Controllers;
+using WebNeuralNets.Models.Enums;
 
 namespace GroupProjectBackend.Controllers
 {
@@ -37,7 +38,8 @@ namespace GroupProjectBackend.Controllers
                 {
                     Id = Guid.NewGuid().ToString(),
                     UserName = model.Username,
-                    PasswordHash = PasswordManager.GenerateSaltedHash(model.Password, model.Username.ToUpperInvariant())
+                    PasswordHash = PasswordManager.GenerateSaltedHash(model.Password, model.Username.ToUpperInvariant()),
+                    LanguageCode = LanguageCode.ENG
                 };
 
                 await _dbContext.ApplicationUsers.AddAsync(user);
@@ -45,6 +47,7 @@ namespace GroupProjectBackend.Controllers
 
                 HttpContext.Session.Clear();
                 HttpContext.Response.Cookies.Append("id", user.Id);
+                HttpContext.Response.Cookies.Append("lang", user.LanguageCode.ToString());
                 HttpContext.Session.SetString("_userName", model.Username);
                 HttpContext.Session.SetString("_id", user.Id.ToString());
                 return Ok("Registered");
@@ -79,6 +82,7 @@ namespace GroupProjectBackend.Controllers
 
                 HttpContext.Session.Clear();
                 HttpContext.Response.Cookies.Append("id", user.Id);
+                HttpContext.Response.Cookies.Append("lang", user.LanguageCode.ToString());
                 HttpContext.Session.SetString("_userName", model.Username);
                 HttpContext.Session.SetString("_id", user.Id.ToString());
                 return Ok("Logged in");
@@ -87,6 +91,24 @@ namespace GroupProjectBackend.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPost("Language")]
+        public async Task<IActionResult> SetLanguage(LanguageCode language)
+        {
+            var userId = HttpContext.Session.GetString("_id");
+            var user = await _dbContext.ApplicationUsers.Where(u => u.Id == userId).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                return BadRequest("Not logged in");
+            }
+
+            user.LanguageCode = language;
+            await _dbContext.SaveChangesAsync();
+
+            HttpContext.Response.Cookies.Append("lang", user.LanguageCode.ToString());
+
+            return Ok();
         }
 
         [HttpGet]

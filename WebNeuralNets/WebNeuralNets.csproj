@@ -27,7 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Views\Index.cshtml" />
     <None Include="Views\_layout.cshtml" />
     <None Include="wwwroot\css\style.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

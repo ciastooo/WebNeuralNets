@@ -51,7 +51,6 @@ namespace WebNeuralNets.Controllers
         }
 
         [HttpPut]
-        [Authorize]
         public async Task<IActionResult> Add(LanguageCode languageCode, string key, string value)
         {
             try
@@ -84,7 +83,6 @@ namespace WebNeuralNets.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> Update(LanguageCode languageCode, string key, string value)
         {
             try
@@ -111,7 +109,6 @@ namespace WebNeuralNets.Controllers
         }
 
         [HttpDelete]
-        [Authorize]
         public async Task<IActionResult> Remove(string key)
         {
             try
@@ -134,8 +131,7 @@ namespace WebNeuralNets.Controllers
         }
 
         [HttpGet("Flush")]
-        [Authorize]
-        public IActionResult FlshTranslations()
+        public IActionResult FlushTranslations()
         {
             _translationHelper.FlushTranslations();
 

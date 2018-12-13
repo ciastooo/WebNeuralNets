@@ -13,7 +13,7 @@ namespace GroupProjectBackend.Tests
         public void Get_WhenNoParamsArePassed_ShouldAllValues()
         {
             // Arrange
-            var controller = new ValuesController();
+            var controller = new HomeController();
 
             // Act
             var response = controller.Get() as ObjectResult;
@@ -33,7 +33,7 @@ namespace GroupProjectBackend.Tests
         public void Get_WhenParamIsPassed_ShouldReturnValue(int id, string exptectedValue)
         {
             // Arrange
-            var controller = new ValuesController();
+            var controller = new HomeController();
 
             // Act
             var response = controller.Get(id) as ObjectResult;
@@ -51,7 +51,7 @@ namespace GroupProjectBackend.Tests
         public void Post_WhenParamIsPassed_ShouldReturnOkStatusResponse(string param, string expectedValue)
         {
             // Arrange
-            var controller = new ValuesController();
+            var controller = new HomeController();
 
             // Act
             var response = controller.Post(param) as ObjectResult;
@@ -69,7 +69,7 @@ namespace GroupProjectBackend.Tests
         public void Put_WhenParamsArePassed_ShouldReturnOkStatusResponse(int id, string value)
         {
             // Arrange
-            var controller = new ValuesController();
+            var controller = new HomeController();
 
             // Act
             var response = controller.Put(id, value);
@@ -85,7 +85,7 @@ namespace GroupProjectBackend.Tests
         public void Delete_WhenParamIsPassed_ShouldReturnNoContentStatusResponse(int id)
         {
             // Arrange
-            var controller = new ValuesController();
+            var controller = new HomeController();
 
             // Act
             var response = controller.Delete(id);

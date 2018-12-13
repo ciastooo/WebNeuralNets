@@ -7,6 +7,8 @@
     var menuLoggedInLinks = document.getElementById('loggedIn');
     var menuNotLoggedInLinks = document.getElementById('notLoggedIn');
 
+    var translations = [];
+
     function toggleClass(element, className) {
         var classes = element.className.split(/\s+/);
         var length = classes.length;
@@ -25,6 +27,32 @@
         element.className = classes.join(' ');
     }
 
+    function translateAll() {
+        let toTranslate = document.getElementsByClassName("translate");
+
+        for (let i = 0; i < toTranslate.length; i++) {
+            let elem = toTranslate[i];
+            var key = elem.innerHTML;
+
+            if (translations[key]) {
+                elem.innerHTML = translations[key];
+            } else {
+                fetch("https://localhost:44357/api/Translation/" + key + "?language=" + getLanugage()).then(response => {
+                    if (response.status == 200) {
+                        response.text().then(text => {
+                            if (text) {
+                                translations[key] = text;
+                                elem.innerHTML = text;
+                            }
+                        });
+                    }
+                }).catch(err => {
+                    console.error(err);
+                });
+            }
+        }
+    }
+
     function toggleAll(e) {
         var active = 'active';
 
@@ -41,7 +69,29 @@
             return parts.pop().split(";").shift();
         }
         return null;
-    };
+    }
+
+    function getLanugage() {
+        let language = getCookie("lang");
+        if (language)
+            return lanugage;
+        return "ENG";
+    }
+
+    function setLanguage(language) {
+        language = language.toUpperCase();
+        fetch("https://localhost:44357/api/Account/Language?language=" + language, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            body: JSON.stringify(language)
+        }).then(response => {
+            console.error(response);
+        }).catch(err => {
+            console.error(err);
+        });
+    }
 
     function logOut() {
         fetch("https://localhost:44357/api/Account/Logout").then(response => {
@@ -63,11 +113,12 @@
 
     document.getElementById("logoutLink").onclick = logOut;
 
-    console.log("logged in", getCookie("id"));
     if (getCookie("id")) {
         menuLoggedInLinks.classList.remove("hidden");
     } else {
         menuNotLoggedInLinks.classList.remove("hidden");
     }
+
+    translateAll();
 
 }(this, this.document));

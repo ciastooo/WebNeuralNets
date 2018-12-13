@@ -2,19 +2,13 @@
 using WebNeuralNets.Models.DB;
 namespace WebNeuralNets.Controllers
 {
-    public class ViewController : Controller
+    public class HomeController : Controller
     {
         private readonly WebNeuralNetDbContext _context;
 
-        public ViewController(WebNeuralNetDbContext context)
+        public HomeController(WebNeuralNetDbContext context)
         {
             _context = context;
-        }
-
-        // GET: LoginModelDtoes
-        public IActionResult Index()
-        {
-            return View("~/Views/Index.cshtml");
         }
 
         public IActionResult Login()
