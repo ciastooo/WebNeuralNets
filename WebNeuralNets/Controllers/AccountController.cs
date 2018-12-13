@@ -7,12 +7,13 @@ using WebNeuralNets.Models.Dto;
 using WebNeuralNets.BusinessLogic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using WebNeuralNets.Controllers;
 
 namespace GroupProjectBackend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountController : BaseController
     {
         private readonly WebNeuralNetDbContext _dbContext;
 

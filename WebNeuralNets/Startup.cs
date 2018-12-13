@@ -70,6 +70,7 @@ namespace WebNeuralNets
             });
 
             app.UseHttpsRedirection();
+            app.UseRequestLocalization();
             app.UseCors();
             app.UseStaticFiles();
             app.UseCookiePolicy();
