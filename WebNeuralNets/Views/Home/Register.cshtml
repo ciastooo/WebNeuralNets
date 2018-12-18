@@ -5,32 +5,29 @@
     Layout = "~/Views/_layout.cshtml";
 }
 
-<h2>Register</h2>
-
-<h4>LoginModelDto</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Register">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Username" class="control-label"></label>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </form>
+<div class="header">
+    <h1 class="translate">REGISTER_TEXT</h1>
+</div>
+<div class="content">
+    <div class="form-group">
+        <label for="Username" class="control-label translate">USERNAME_INPUT</label>
+        <input id="Username" class="form-control" />
+        <span id="UsernameValidation" class="text-danger hidden translate">VALIDATION_FIELDREQUIRED</span>
+    </div>
+    <div class="form-group">
+        <label for="Password" class="control-label translate">PASSWORD_INPUT</label>
+        <input id="Password" type="password" class="form-control" />
+        <span id="PasswordValidation" class="text-danger hidden translate">VALIDATION_FIELDREQUIRED</span>
+        <span id="PasswordValidationLength" class="text-danger hidden translate">VALIDATION_TOOSHORT</span>
+    </div>
+    <div class="form-group">
+        <label for="Password2" class="control-label translate">PASSWORD2_INPUT</label>
+        <input id="Password2" type="password" class="form-control" />
+        <span id="PasswordValidation2" class="text-danger hidden translate">VALIDATION_PASSWORDMATCH</span>
+    </div>
+    <div class="form-group">
+        <input id="submit" type="submit" value="REGISTER_TEXT" class="btn btn-primary translate col-md-12" />
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
+<script src="~/js/register.js"></script>

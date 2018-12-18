@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using WebNeuralNets.Models.DB;
 using WebNeuralNets.Models.Dto;

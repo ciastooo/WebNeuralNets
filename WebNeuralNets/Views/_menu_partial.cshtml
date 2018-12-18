@@ -1,6 +1,6 @@
 ﻿<div id="menu">
     <div class="pure-menu">
-        <a class="pure-menu-heading" href="#">Neural nets @Context.Request.Path.Value.Contains("login")</a>
+        <a class="pure-menu-heading" href="@Url.Action("Index", "Home")">Neural nets @Context.Request.Path.Value.Contains("login")</a>
         <ul id="notLoggedIn" class="pure-menu-list hidden">
             <li class="pure-menu-item @(Context.Request.Path.Value.Contains("login", StringComparison.InvariantCultureIgnoreCase) ? "menu-item-divided pure-menu-selected" : "")"><a href="@Url.Action("Login", "Home")" class="pure-menu-link translate">LOGIN_TEXT</a></li>
             <li class="pure-menu-item @(Context.Request.Path.Value.Contains("register", StringComparison.InvariantCultureIgnoreCase) ? "menu-item-divided pure-menu-selected" : "")"><a href="@Url.Action("Register", "Home")" class="pure-menu-link translate">REGISTER_TEXT</a></li>
