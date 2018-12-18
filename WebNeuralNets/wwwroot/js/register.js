@@ -47,6 +47,8 @@
                 }).then(response => {
                     if (response.status == 200) {
                         window.location.replace(baseUrl + "/Home");
+                    } else {
+                        document.getElementById('loginFailed').classList.remove("hidden");
                     }
                 }).catch(err => {
                     console.error(err);
