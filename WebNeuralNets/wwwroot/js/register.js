@@ -2,6 +2,7 @@
     var loginInput = document.getElementById("Username");
     var passwordInput = document.getElementById("Password");
     var passwordInput2 = document.getElementById("Password2");
+    var baseUrl = document.getElementById('baseUrl').value;
 
     document.getElementById("submit").onclick = function () {
         var isValid = true;
@@ -36,7 +37,7 @@
                 username: loginInput.value,
                 password: passwordInput.value
             }
-            fetch("https://localhost:5001/api/Account/Register",
+            fetch(baseUrl + "/api/Account/Register",
                 {
                     method: "POST",
                     headers: {
@@ -45,8 +46,7 @@
                     body: JSON.stringify(postBody)
                 }).then(response => {
                     if (response.status == 200) {
-                        window.location.replace("https://localhost:5001/Home");
-                        console.log(response);
+                        window.location.replace(baseUrl + "/Home");
                     }
                 }).catch(err => {
                     console.error(err);

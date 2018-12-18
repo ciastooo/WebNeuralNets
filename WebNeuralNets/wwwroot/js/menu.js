@@ -4,6 +4,7 @@
     var menu = document.getElementById('menu');
     var menuLink = document.getElementById('menuLink');
     var content = document.getElementById('main');
+    var baseUrl = document.getElementById('baseUrl').value;
 
     var translations = [];
 
@@ -36,7 +37,7 @@
             if (translations[key]) {
                 elem.innerHTML = translations[key];
             } else {
-                fetch("https://localhost:44357/api/Translation/" + key + "?language=" + getLanugage()).then(response => {
+                fetch(baseUrl + "/api/Translation/" + key + "?language=" + getLanugage()).then(response => {
                     if (response.status == 200) {
                         response.text().then(text => {
                             if (text) {
@@ -83,7 +84,7 @@
 
     function setLanguage(language) {
         language = language.toUpperCase();
-        fetch("https://localhost:44357/api/Account/Language?language=" + language, {
+        fetch(baseUrl + "/api/Account/Language?language=" + language, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json; charset=utf-8"
@@ -97,7 +98,7 @@
     }
 
     function logOut() {
-        fetch("https://localhost:44357/api/Account/Logout").then(response => {
+        fetch(baseUrl + "/api/Account/Logout").then(response => {
             document.location.reload();
         }).catch(err => {
             console.error(err);

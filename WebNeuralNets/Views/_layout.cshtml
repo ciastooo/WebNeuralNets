@@ -12,6 +12,9 @@
 </head>
 <body>
 
+    @{
+        <input class="hidden" id="baseUrl" value="@(Context.Request.Scheme + "://" + @Context.Request.Host + @Context.Request.PathBase)"/>
+    }
     <div id="layout">
         <!-- Menu toggle -->
         <a href="#menu" id="menuLink" class="menu-link">
@@ -19,7 +22,7 @@
             <span></span>
         </a>
         @{
-        Html.RenderPartial("_menu_partial.cshtml");
+            Html.RenderPartial("_menu_partial.cshtml");
         }
         <div id="main">
             @RenderBody()
