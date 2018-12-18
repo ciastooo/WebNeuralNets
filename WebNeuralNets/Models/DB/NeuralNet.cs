@@ -51,6 +51,7 @@ namespace WebNeuralNets.Models.DB
         public int TrainingIterations { get; set; }
 
         public int LayersCount { get; set; }
+
         public int NeuronsCount { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using GroupProjectBackend.Config;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -38,7 +39,6 @@ namespace WebNeuralNets
             services.AddDbContext<WebNeuralNetDbContext>(opt => opt.UseSqlServer(config.ConnectionString));
 
             services.AddSession();
-
             services.AddScoped<INeuralNetCreator, NeuralNetCreator>();
 
             //Singletons
