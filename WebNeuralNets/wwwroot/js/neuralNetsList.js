@@ -1,17 +1,10 @@
 (function (window, document) {
 
 
-    fetch(baseUrl + "/api/Translation/" + key + "?language=" + getLanugage()).then(response => {
+    fetch(baseUrl + "/api/NeuralNet/").then(response => {
         if (response.status == 200) {
-            response.text().then(text => {
-                if (text) {
-                    translations[key] = text;
-                    if (elem.innerHTML) {
-                        elem.innerHTML = text;
-                    } else {
-                        elem.value = text;
-                    }
-                }
+            response.json().then(body => {
+                console.log(body);
             });
         }
     }).catch(err => {
