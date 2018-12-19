@@ -40,6 +40,14 @@ body {
     line-height: 1.6em;
 }
 
+.tableContent {
+    margin: 0 auto;
+    padding: 0 2em;
+    max-width: 90%;
+    margin-bottom: 50px;
+    line-height: 1.6em;
+}
+
 .header {
     margin: 0;
     color: #333;

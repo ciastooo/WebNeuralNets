@@ -7,7 +7,7 @@
 <div class="header">
     <h1 class="translate">MENU_NEURALNETSLIST</h1>
 </div>
-<div class="content">
+<div class="tableContent">
     <table class="table">
         <thead>
             <tr>
@@ -19,11 +19,28 @@
                 <th class="translate">TEXT_NEURONSCOUNT</th>
                 <th class="translate">TEXT_ISTRAINING</th>
                 <th class="translate">TEXT_TRAININGITERATIONS</th>
+                <th></th>
             </tr>
         </thead>
-        <tbody id="tableBody">
-        </tbody>
+        <tbody id="tableBody"></tbody>
     </table>
+    <div class="col-md-12">
+        <div class="form-group col-md-3">
+            <input id="Name" placeholder="Name" class="form-control" />
+            <span id="NameValidation" class="text-danger hidden translate">VALIDATION_FIELDREQUIRED</span>
+        </div>
+        <div class="form-group col-md-5">
+            <input id="Description" placeholder="Description" class="form-control" />
+        </div>
+        <div class="form-group col-md-2">
+            <input id="TraingingRate" placeholder="Training rate" class="form-control" type="number" step="0.01" />
+            <span id="TrainingRateValidation" class="text-danger hidden translate">VALIDATION_FIELDREQUIRED</span>
+        </div>
+        <div class="form-gorup col-md-2">
+            <button id="addButton" class="btn btn-primary pull-right translate">TEXT_ADD</button>
+        </div>
+    </div>
 </div>
 
-<script src="~/js/register.js"></script>
+
+<script src="~/js/neuralNetsList.js"></script>
