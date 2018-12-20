@@ -1,11 +1,16 @@
 ﻿(function (window, document) {
 
     var baseUrl = document.getElementById('baseUrl').value;
+
     var idInput = document.getElementById("id");
     var nameInput = document.getElementById("Name");
     var nameHeader = document.getElementById("NameHeader");
     var descriptionInput = document.getElementById("Description");
     var trainingRateInput = document.getElementById("TrainingRate");
+
+    var input1Input = document.getElementById("Input1");
+    var input2Input = document.getElementById("Input2");
+
     var path = window.location.pathname.split("/");
     var paramId = path[path.length - 1];
 
