@@ -12,14 +12,11 @@
         <thead>
             <tr>
                 <th width="5%">Id</th>
-                <th width="10%"class="translate">TEXT_NAME</th>
-                <th width="25%"class="translate">TEXT_DESCRIPTION</th>
-                <th width="5%"class="translate">TEXT_TRAININGRATE</th>
-                <th width="5%"class="translate">TEXT_LAYERSCOUNT</th>
-                <th width="5%"class="translate">TEXT_NEURONSCOUNT</th>
-                <th width="10%"class="translate">TEXT_ISTRAINING</th>
-                <th width="10%"class="translate">TEXT_TRAININGITERATIONS</th>
-                <th width="25%"></th>
+                <th width="20%" class="translate">TEXT_NAME</th>
+                <th width="15%" class="translate">TEXT_INPUT</th>
+                <th width="15%" class="translate">TEXT_INPUT</th>
+                <th width="10%" class="translate">TEXT_OUTPUT</th>
+                <th width="35%"></th>
             </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -29,19 +26,23 @@
             <input id="Name" placeholder="Name" class="form-control" />
             <span id="NameValidation" class="text-danger hidden translate">VALIDATION_FIELDREQUIRED</span>
         </div>
-        <div class="form-group col-md-5">
-            <input id="Description" placeholder="Description" class="form-control" />
+        <div class="form-group col-md-3">
+            <input id="Input1" placeholder="Input" class="form-control" type="number" step="0.1" />
+            <span id="Input1Validation" class="text-danger hidden translate">VALIDATION_FIELDREQUIRED</span>
+        </div>
+        <div class="form-group col-md-3">
+            <input id="Input2" placeholder="Input" class="form-control" type="number" step="0.1" />
+            <span id="Input2Validation" class="text-danger hidden translate">VALIDATION_FIELDREQUIRED</span>
         </div>
         <div class="form-group col-md-2">
-            <input id="TrainingRate" placeholder="Training rate" class="form-control" type="number" step="0.01" />
-            <span id="TrainingRateValidation" class="text-danger hidden translate">VALIDATION_FIELDREQUIRED</span>
-            <span id="TrainingRateTooLowValidation" class="text-danger hidden translate">VALIDATION_TRAININGRATETOOLOW</span>
+            <input id="Output" placeholder="Output" class="form-control" type="number" step="0.1" />
+            <span id="OutputValidation" class="text-danger hidden translate">VALIDATION_FIELDREQUIRED</span>
         </div>
-        <div class="form-gorup col-md-2">
+        <div class="form-gorup col-md-1">
             <button id="addButton" class="btn btn-primary pull-right translate">TEXT_ADD</button>
         </div>
     </div>
 </div>
 
 
-<script src="~/js/neuralNetsList.js"></script>
+<script src="~/js/trainingDataList.js"></script>

@@ -64,7 +64,8 @@ namespace WebNeuralNets.Controllers
             return View();
         }
 
-        public IActionResult TrainingDataList()
+        [Route("Home/TrainingDataList/{id:int}")]
+        public IActionResult TrainingDataList(int id)
         {
             if (!IsLoggedIn)
             {

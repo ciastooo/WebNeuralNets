@@ -6,6 +6,7 @@
     var menu = document.getElementById('menu');
     var menuLink = document.getElementById('menuLink');
     var content = document.getElementById('main');
+    var style = document.getElementById('styl');
     var baseUrl = document.getElementById('baseUrl').value;
 
     var translations = [];
@@ -121,6 +122,13 @@
 
     document.getElementById("langPL").onclick = function () { return setLanguage("PL") };
     document.getElementById("langENG").onclick = function () { return setLanguage("ENG") };
+
+    document.getElementById("styl1").onclick = function () {
+        style.href = "/css/style.css";
+    };
+    document.getElementById("styl2").onclick = function () {
+        style.href = "/css/style2.css";
+    };
 
     if (getCookie("id")) {
         document.getElementById('loggedIn').classList.remove("hidden");

@@ -51,6 +51,12 @@
         }
     }
 
+    function trainingDataNeuralNetFunctionFactory(id) {
+        return function () {
+            window.location.replace(baseUrl + "/Home/TrainingDataList/" + id);
+        }
+    }
+
     function generateButtonsCell(id) {
         var cell = document.createElement("td");
         var parentDiv = document.createElement("div");
@@ -71,6 +77,13 @@
         detailsButton.innerHTML = "Szczegóły";
         detailsButton.onclick = detailsNeuralNetFunctionFactory(id);
         parentDiv.appendChild(detailsButton);
+
+        var trainingDataButton = document.createElement("button");
+        trainingDataButton.classList.add("btn");
+        trainingDataButton.classList.add("btn-default");
+        trainingDataButton.innerHTML = "Dane treningowe";
+        trainingDataButton.onclick = trainingDataNeuralNetFunctionFactory(id);
+        parentDiv.appendChild(trainingDataButton);
 
         var removeButton = document.createElement("button");
         removeButton.classList.add("btn");
