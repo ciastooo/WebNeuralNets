@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebNeuralNets.Models.DB;
 namespace WebNeuralNets.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class HomeController : Controller
     {
         private bool IsLoggedIn
@@ -44,7 +45,8 @@ namespace WebNeuralNets.Controllers
             return View();
         }
 
-        public IActionResult NeuralNetDetails()
+        [Route("Home/NeuralNetDetails/{id:int}")]
+        public IActionResult NeuralNetDetails(int id)
         {
             if (!IsLoggedIn)
             {

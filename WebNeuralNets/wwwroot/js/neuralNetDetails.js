@@ -1,52 +1,73 @@
-(function (window, document) {
-    var loginInput = document.getElementById("Username");
-    var passwordInput = document.getElementById("Password");
-    var baseUrl = document.getElementById('baseUrl').value;
+﻿(function (window, document) {
 
-    document.getElementById("submit").onclick = function () {
+    var baseUrl = document.getElementById('baseUrl').value;
+    var idInput = document.getElementById("id");
+    var nameInput = document.getElementById("Name");
+    var nameHeader = document.getElementById("NameHeader");
+    var descriptionInput = document.getElementById("Description");
+    var trainingRateInput = document.getElementById("TrainingRate");
+    var path = window.location.pathname.split("/");
+    var paramId = path[path.length - 1];
+
+    document.getElementById("editButton").onclick = function () {
         var isValid = true;
-        if (!loginInput.value) {
-            document.getElementById('UsernameValidation').classList.remove("hidden");
+        if (!nameInput.value) {
+            document.getElementById('NameValidation').classList.remove("hidden");
             isValid = false;
         } else {
-            document.getElementById('UsernameValidation').classList.add("hidden");
+            document.getElementById('NameValidation').classList.add("hidden");
         }
-        if (!passwordInput.value) {
-            document.getElementById('PasswordValidation').classList.remove("hidden");
+        if (!trainingRateInput.value) {
+            document.getElementById('TrainingRateValidation').classList.remove("hidden");
             isValid = false;
         } else {
-            document.getElementById('PasswordValidation').classList.add("hidden");
-            if (passwordInput.value.length < 6) {
-                document.getElementById('PasswordValidationLength').classList.remove("hidden");
+            document.getElementById('TrainingRateValidation').classList.add("hidden");
+            if (trainingRateInput.value <= 0) {
+                document.getElementById('TrainingRateTooLowValidation').classList.remove("hidden");
                 isValid = false;
             } else {
-                document.getElementById('PasswordValidationLength').classList.add("hidden");
+                document.getElementById('TrainingRateValidation').classList.add("hidden");
             }
         }
 
         if (isValid) {
-            console.log("OK");
-            var postBody = {
-                username: loginInput.value,
-                password: passwordInput.value
+            var body =
+            {
+                id: idInput.value,
+                name: nameInput.value,
+                description: descriptionInput.value,
+                trainingRate: trainingRateInput.value
             }
-            fetch(baseUrl + "/api/Account/Login",
+            fetch(baseUrl + "/api/NeuralNet",
                 {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json; charset=utf-8"
                     },
-                    body: JSON.stringify(postBody)
+                    body: JSON.stringify(body)
                 }).then(response => {
                     if (response.status == 200) {
-                        window.location.replace(baseUrl + "/Home");
-                    } else {
-                        document.getElementById("loginFailed").classList.remove("hidden");
+                        window.location.reload();
                     }
                 }).catch(err => {
                     console.error(err);
                 });
         }
     }
+
+    fetch(baseUrl + "/api/NeuralNet/" + paramId).then(response => {
+        if (response.status == 200) {
+            response.json().then(body => {
+                console.log(body);
+                idInput.value = body.id;
+                nameInput.value = body.name;
+                descriptionInput.value = body.description;
+                trainingRateInput.value = body.trainingRate;
+                nameHeader.innerHTML = body.name;
+            });
+        }
+    }).catch(err => {
+        console.error(err);
+    });
 
 }(this, this.document));

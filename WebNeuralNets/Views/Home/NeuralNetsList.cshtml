@@ -11,15 +11,15 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th class="translate">TEXT_NAME</th>
-                <th class="translate">TEXT_DESCRIPTION</th>
-                <th class="translate">TEXT_TRAININGRATE</th>
-                <th class="translate">TEXT_LAYERSCOUNT</th>
-                <th class="translate">TEXT_NEURONSCOUNT</th>
-                <th class="translate">TEXT_ISTRAINING</th>
-                <th class="translate">TEXT_TRAININGITERATIONS</th>
-                <th></th>
+                <th width="5%">Id</th>
+                <th width="10%"class="translate">TEXT_NAME</th>
+                <th width="25%"class="translate">TEXT_DESCRIPTION</th>
+                <th width="5%"class="translate">TEXT_TRAININGRATE</th>
+                <th width="5%"class="translate">TEXT_LAYERSCOUNT</th>
+                <th width="5%"class="translate">TEXT_NEURONSCOUNT</th>
+                <th width="10%"class="translate">TEXT_ISTRAINING</th>
+                <th width="10%"class="translate">TEXT_TRAININGITERATIONS</th>
+                <th width="25%"></th>
             </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -33,8 +33,9 @@
             <input id="Description" placeholder="Description" class="form-control" />
         </div>
         <div class="form-group col-md-2">
-            <input id="TraingingRate" placeholder="Training rate" class="form-control" type="number" step="0.01" />
+            <input id="TrainingRate" placeholder="Training rate" class="form-control" type="number" step="0.01" />
             <span id="TrainingRateValidation" class="text-danger hidden translate">VALIDATION_FIELDREQUIRED</span>
+            <span id="TrainingRateTooLowValidation" class="text-danger hidden translate">VALIDATION_TRAININGRATETOOLOW</span>
         </div>
         <div class="form-gorup col-md-2">
             <button id="addButton" class="btn btn-primary pull-right translate">TEXT_ADD</button>

@@ -169,6 +169,7 @@ namespace WebNeuralNets.Controllers
 
                     dbModel.Name = model.Name;
                     dbModel.Description = model.Description;
+                    dbModel.TrainingRate = model.TrainingRate;
                     dbModel.Training = model.Training;
 
                     await _dbcontext.SaveChangesAsync();

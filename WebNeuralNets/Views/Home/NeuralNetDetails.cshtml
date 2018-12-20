@@ -1,56 +1,34 @@
-﻿@model WebNeuralNets.Models.Dto.NeuralNetDto
+﻿@model WebNeuralNets.Models.Dto.LoginModelDto
 
-<h4>NeuralNetDto</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="NeuralNetDetails">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TrainingRate" class="control-label"></label>
-                <input asp-for="TrainingRate" class="form-control" />
-                <span asp-validation-for="TrainingRate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Iterations" class="control-label"></label>
-                <input asp-for="Iterations" class="form-control" />
-                <span asp-validation-for="Iterations" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="Training" /> @Html.DisplayNameFor(model => model.Training)
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="TrainingIterations" class="control-label"></label>
-                <input asp-for="TrainingIterations" class="form-control" />
-                <span asp-validation-for="TrainingIterations" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </form>
+@{
+    Layout = "~/Views/_layout.cshtml";
+}
+
+<div class="header">
+    <h1 class="translate">MENU_NEURALNETDETAILS</h1>
+    <h2 id="NameHeader"></h2>
+</div>
+<div class="content">
+    <input id="id" class="hidden" />
+    <div class="form-group">
+        <label for="Name" class="control-label translate">TEXT_NAME</label>
+        <input id="Name" class="form-control" />
+        <span id="NameValidation" class="text-danger hidden translate">VALIDATION_FIELDREQUIRED</span>
+    </div>
+    <div class="form-group">
+        <label for="Description" class="control-label translate">TEXT_DESCRIPTION</label>
+        <input id="Description" name="Description" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="Description" class="control-label translate">TEXT_TRAININGRATE</label>
+        <input id="TrainingRate" class="form-control" type="number" step="0.01" />
+        <span id="TrainingRateValidation" class="text-danger hidden translate">VALIDATION_FIELDREQUIRED</span>
+        <span id="TrainingRateTooLowValidation" class="text-danger hidden translate">VALIDATION_TRAININGRATETOOLOW</span>
+    </div>
+    <div class="form-gorup">
+        <button id="editButton" class="btn btn-primary pull-right translate">TEXT_EDIT</button>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
+<script src="~/js/neuralNetDetails.js"></script>

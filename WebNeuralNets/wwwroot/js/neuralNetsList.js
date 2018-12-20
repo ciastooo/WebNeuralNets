@@ -26,7 +26,7 @@
 
     function trainNeuralNetFunctionFactory(id) {
         return function () {
-            fetch(baseUrl + "/api/NeuralNet/" + id + "/Trains",
+            fetch(baseUrl + "/api/NeuralNet/" + id + "/Train",
                 {
                     method: "POST",
                     headers: {
@@ -43,13 +43,39 @@
         }
     }
 
+    function detailsNeuralNetFunctionFactory(id) {
+        return function () {
+            window.location.replace(baseUrl + "/Home/NeuralNetDetails/" + id);
+        }
+    }
+
     function generateButtonsCell(id) {
         var cell = document.createElement("td");
+        var parentDiv = document.createElement("div");
+        parentDiv.classList.add("btn-group");
+        parentDiv.classList.add("pull-right");
+        cell.appendChild(parentDiv);
+
+        var trainButton = document.createElement("button");
+        trainButton.classList.add("btn");
+        trainButton.classList.add("btn-primary");
+        trainButton.innerHTML = "Trenuj";
+        trainButton.onclick = trainNeuralNetFunctionFactory(id);
+        parentDiv.appendChild(trainButton);
+
+        var detailsButton = document.createElement("button");
+        detailsButton.classList.add("btn");
+        detailsButton.classList.add("btn-default");
+        detailsButton.innerHTML = "Szczegóły";
+        detailsButton.onclick = detailsNeuralNetFunctionFactory(id);
+        parentDiv.appendChild(detailsButton);
+
         var removeButton = document.createElement("button");
         removeButton.classList.add("btn");
         removeButton.classList.add("btn-danger");
         removeButton.innerHTML = "Usuń";
-        removeButton.onclick = removeNeuralNetFunctionFactory(neuralNet.id);
+        removeButton.onclick = removeNeuralNetFunctionFactory(id);
+        parentDiv.appendChild(removeButton);
 
         return cell;
     }
@@ -68,6 +94,12 @@
             isValid = false;
         } else {
             document.getElementById('TrainingRateValidation').classList.add("hidden");
+            if (trainingrateInput.value <= 0) {
+                document.getElementById('TrainingRateTooLowValidation').classList.remove("hidden");
+                isValid = false;
+            } else {
+                document.getElementById('TrainingRateValidation').classList.add("hidden");
+            }
         }
 
         if (isValid) {
@@ -75,7 +107,7 @@
             var description = descriptionInput.value;
             var trainingRate = trainingrateInput.value;
 
-            fetch(baseUrl + "/api/NeuralNet?name=" + name + "&traningRate=" + trainingRate + (description ? ("&description=" + description) : ""),
+            fetch(baseUrl + "/api/NeuralNet?name=" + name + "&trainingRate=" + trainingRate + (description ? ("&description=" + description) : ""),
                 {
                     method: "PUT",
                     headers: {
@@ -107,7 +139,7 @@
                     row.insertCell(5).appendChild(document.createTextNode(neuralNet.neuronsCount));
                     row.insertCell(6).appendChild(document.createTextNode(neuralNet.training));
                     row.insertCell(7).appendChild(document.createTextNode(neuralNet.trainingIterations));
-                    row.appendChild(generateButtonsCell());
+                    row.appendChild(generateButtonsCell(neuralNet.id));
                 }
             });
         }
