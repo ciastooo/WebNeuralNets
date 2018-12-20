@@ -63,5 +63,14 @@ namespace WebNeuralNets.Controllers
             }
             return View();
         }
+
+        public IActionResult TrainingDataList()
+        {
+            if (!IsLoggedIn)
+            {
+                return RedirectToAction("Login");
+            }
+            return View();
+        }
     }
 }

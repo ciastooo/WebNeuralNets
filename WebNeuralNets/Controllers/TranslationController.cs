@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using WebNeuralNets.BusinessLogic;
@@ -65,15 +66,16 @@ namespace WebNeuralNets.Controllers
                     return BadRequest("VALIDATION_TRANSLATIONALREADYEXISTS");
                 }
 
-                var translation = new TranslationValue
-                {
-                    Key = key.ToUpperInvariant(),
-                    Value = value,
-                    LanguageCode = languageCode
-                };
+                var keyParam = new SqlParameter("@key", key.ToUpperInvariant());
+                var valueParam = new SqlParameter("@value", value);
+                var languageParam = new SqlParameter("@languageCode", (int)languageCode);
 
-                await _dbContext.TranslationValues.AddAsync(translation);
-                await _dbContext.SaveChangesAsync();
+                await _dbContext.Database.ExecuteSqlCommandAsync(
+                    $@"INSERT INTO [dbo].[TranslationValues]
+                        ([Key],[Value],[LanguageCode])
+                     VALUES
+                           (@key,@value,@languageCode)", keyParam, valueParam, languageParam);
+
                 return Ok();
             }
             catch (Exception ex)

@@ -1,8 +1,9 @@
-﻿(function (window, document) {
+﻿"use strict";
+
+(function (window, document) {
 
     var baseUrl = document.getElementById('baseUrl').value;
 
-    var idInput = document.getElementById("id");
     var nameInput = document.getElementById("Name");
     var nameHeader = document.getElementById("NameHeader");
     var descriptionInput = document.getElementById("Description");
@@ -10,6 +11,7 @@
 
     var input1Input = document.getElementById("Input1");
     var input2Input = document.getElementById("Input2");
+    var outputInput = document.getElementById("Output");
 
     var path = window.location.pathname.split("/");
     var paramId = path[path.length - 1];
@@ -38,7 +40,7 @@
         if (isValid) {
             var body =
             {
-                id: idInput.value,
+                id: paramId,
                 name: nameInput.value,
                 description: descriptionInput.value,
                 trainingRate: trainingRateInput.value
@@ -60,11 +62,39 @@
         }
     }
 
+    document.getElementById("propagateButton").onclick = function () {
+        var isValid = true;
+        if (!input1Input.value) {
+            document.getElementById('Input1Validation').classList.remove("hidden");
+            isValid = false;
+        } else {
+            document.getElementById('Input1Validation').classList.add("hidden");
+        }
+        if (!input2Input.value) {
+            document.getElementById('Input2Validation').classList.remove("hidden");
+            isValid = false;
+        } else {
+            document.getElementById('Input2Validation').classList.add("hidden");
+        }
+
+        if (isValid) {
+            fetch(baseUrl + "/api/NeuralNet/" + paramId + "/Propagate?input=" + input1Input.value + "&input=" + input2Input.value).then(response => {
+                    if (response.status == 200) {
+                        response.json().then(array => {
+                            outputInput.value = array[0];
+                        })
+                    }
+                }).catch(err => {
+                    console.error(err);
+                });
+        }
+    }
+
+
     fetch(baseUrl + "/api/NeuralNet/" + paramId).then(response => {
         if (response.status == 200) {
             response.json().then(body => {
                 console.log(body);
-                idInput.value = body.id;
                 nameInput.value = body.name;
                 descriptionInput.value = body.description;
                 trainingRateInput.value = body.trainingRate;

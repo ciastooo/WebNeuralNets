@@ -1,3 +1,5 @@
+"use strict";
+
 (function (window, document) {
     var loginInput = document.getElementById("Username");
     var passwordInput = document.getElementById("Password");
