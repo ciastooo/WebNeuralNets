@@ -57,6 +57,46 @@
         }
     }
 
+    function downloadJSONNeuralNetFunctionFactory(id) {
+        return function () {
+            fetch(baseUrl + "/api/Export/json/" + id).then(response => {
+                if (response.status == 200) {
+                    console.log(response);
+                    response.blob().then(blob => {
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = "neuralnet_" + id + ".json";
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    })
+                }
+            }).catch(err => {
+                console.error(err);
+            });
+        }
+    }
+
+    function downloadXMLNeuralNetFunctionFactory(id) {
+        return function () {
+            fetch(baseUrl + "/api/Export/xml/" + id).then(response => {
+                if (response.status == 200) {
+                    console.log(response);
+                    response.blob().then(blob => {
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = "neuralnet_" + id + ".xml";
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    })
+                }
+            }).catch(err => {
+                console.error(err);
+            });
+        }
+    }
+
     function generateButtonsCell(id) {
         var cell = document.createElement("td");
         var parentDiv = document.createElement("div");
@@ -84,6 +124,20 @@
         trainingDataButton.innerHTML = "Dane treningowe";
         trainingDataButton.onclick = trainingDataNeuralNetFunctionFactory(id);
         parentDiv.appendChild(trainingDataButton);
+
+        var jsonDataButton = document.createElement("button");
+        jsonDataButton.classList.add("btn");
+        jsonDataButton.classList.add("btn-default");
+        jsonDataButton.innerHTML = "JSON";
+        jsonDataButton.onclick = downloadJSONNeuralNetFunctionFactory(id);
+        parentDiv.appendChild(jsonDataButton);
+
+        var xmlDataButton = document.createElement("button");
+        xmlDataButton.classList.add("btn");
+        xmlDataButton.classList.add("btn-default");
+        xmlDataButton.innerHTML = "XML";
+        xmlDataButton.onclick = downloadXMLNeuralNetFunctionFactory(id);
+        parentDiv.appendChild(xmlDataButton);
 
         var removeButton = document.createElement("button");
         removeButton.classList.add("btn");
