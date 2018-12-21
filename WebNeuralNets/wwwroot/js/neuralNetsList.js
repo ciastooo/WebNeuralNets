@@ -89,7 +89,7 @@
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
-                    })
+                    });
                 }
             }).catch(err => {
                 console.error(err);
@@ -149,7 +149,6 @@
         return cell;
     }
 
-
     document.getElementById("addButton").onclick = function () {
         var isValid = true;
         if (!nameInput.value) {
@@ -191,6 +190,49 @@
                 });
         }
     }
+
+    document.getElementById("fileUpload").addEventListener("change", function () {
+        var fileList = this.files;
+        for (var i = 0; i < fileList.length; i++) {
+            var file = fileList[i];
+            if (file.type != "application/json") {
+                document.getElementById("FileUploadValidation").classList.remove("hidden");
+                return;
+            }
+            document.getElementById("FileUploadValidation").classList.add("hidden");
+            var reader = new FileReader();
+            reader.onload = function () {
+                var data = reader.result.trim().replace(/\\n/g, "\\n")
+                    .replace(/\\'/g, "\\'")
+                    .replace(/\\"/g, '\\"')
+                    .replace(/\\&/g, "\\&")
+                    .replace(/\\r/g, "\\r")
+                    .replace(/\\t/g, "\\t")
+                    .replace(/\\b/g, "\\b")
+                    .replace(/\\f/g, "\\f")
+                    .replace(/[\u0000-\u0019]+/g, "");
+                var json = JSON.parse(data);
+                var body = new FormData();
+                console.log(JSON.stringify(json));
+                body.append('file', JSON.stringify(json));
+                fetch(baseUrl + "/api/Import",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json; charset=utf-8"
+                        },
+                        body: JSON.stringify(json)
+                    }).then(response => {
+                        if (response.status == 200) {
+                            window.location.reload();
+                        }
+                    }).catch(err => {
+                        console.error(err);
+                    });
+            }
+            reader.readAsText(file);
+        }
+    }, false);
 
 
     fetch(baseUrl + "/api/NeuralNet/").then(response => {
