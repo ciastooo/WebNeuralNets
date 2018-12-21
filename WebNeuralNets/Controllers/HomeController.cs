@@ -10,6 +10,7 @@ namespace WebNeuralNets.Controllers
         {
             get
             {
+                //return HttpContext.Request.Cookies.Keys.Contains("_id");
                 var userId = HttpContext.Session.GetString("_id");
                 return !string.IsNullOrEmpty(userId);
             }
@@ -24,10 +25,6 @@ namespace WebNeuralNets.Controllers
 
         public IActionResult Index()
         {
-            if (!IsLoggedIn)
-            {
-                HttpContext.Response.Cookies.Delete("id");
-            }
             return View();
         }
 
