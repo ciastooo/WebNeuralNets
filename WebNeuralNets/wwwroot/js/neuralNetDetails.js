@@ -82,7 +82,7 @@
                     if (response.status == 200) {
                         response.json().then(array => {
                             outputInput.value = array[0];
-                        })
+                        });
                     }
                 }).catch(err => {
                     console.error(err);

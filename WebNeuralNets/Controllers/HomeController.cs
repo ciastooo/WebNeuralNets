@@ -24,6 +24,10 @@ namespace WebNeuralNets.Controllers
 
         public IActionResult Index()
         {
+            if (!IsLoggedIn)
+            {
+                HttpContext.Response.Cookies.Delete("id");
+            }
             return View();
         }
 
@@ -31,7 +35,6 @@ namespace WebNeuralNets.Controllers
         {
             if (IsLoggedIn)
             {
-                HttpContext.Response.Cookies.Delete("id");
                 return RedirectToAction("Index");
             }
             return View();
@@ -41,7 +44,6 @@ namespace WebNeuralNets.Controllers
         {
             if (IsLoggedIn)
             {
-                HttpContext.Response.Cookies.Delete("id");
                 return RedirectToAction("Index");
             }
             return View();
@@ -74,7 +76,6 @@ namespace WebNeuralNets.Controllers
             if (!IsLoggedIn)
             {
                 HttpContext.Response.Cookies.Delete("id");
-                return RedirectToAction("Login");
                 return RedirectToAction("Login");
             }
             return View();
